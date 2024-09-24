@@ -1,0 +1,28 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Monkey Island SCUMM', sans-serif;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+}
+
+html,
+body {
+    background-color: $negro;
+    min-height: 700px;
+    cursor: url('/media/img/cursorBlanco32.png') 16 16, auto;
+}
+
+.principal__cuerpo {
+    background-color: $fondoPrincipal;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    margin: 0;
+    padding: 0;
+    background-color: $cabecera;
+    position: sticky;
+    top: 0;
+}

@@ -1,0 +1,13 @@
+//plantillas generales
+@import "./noViews/_fuentes.scss";
+@import "./noViews/_variables.scss";
+@import "./noViews/_generales.scss";
+
+//header
+@import "./aHeader/_cabecera.scss";
+
+//main
+@import "./bMain/_principalMain.scss";
+
+//footer
+@import "./cFooter/_pieDePagina.scss";
