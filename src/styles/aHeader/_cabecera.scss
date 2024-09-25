@@ -3,15 +3,15 @@
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
-
+    
     .encabezado__logo {
         display: flex;
 
         .logo__imagen {
             height: 120px;
-            margin: 10px;
             border: solid $letrasLogo 1px;
             align-self: center;
+            margin: 10px;
         }
     }
 }

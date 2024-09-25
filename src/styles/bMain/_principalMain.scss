@@ -7,7 +7,9 @@
     min-height: 50vh;
 
     .tareas__listado {
-
+        display: flex;
+        flex-direction: column;
+        
         h3 {
             color: $letrasLogo;
             border-bottom: 1px solid $letrasLogo;
