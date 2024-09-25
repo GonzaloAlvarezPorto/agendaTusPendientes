@@ -80,7 +80,7 @@ export const Principal = () => {
 
     // Función para validar el formato de la hora
     const esHoraValida = (hora) => {
-        const regex = /^(0[0-9]|1[0-9]|2[0-3]|[0-9]).[0-5][0-9]$/; // Formato HH:MM
+        const regex = /^(0[0-9]|1[0-9]|2[0-3]|[0-9]).[0-5][0-9]$/; // Formato HH.MM
         return regex.test(hora);
     };
 
@@ -102,7 +102,7 @@ export const Principal = () => {
             setNuevaHora('');
             setNuevaDescripcion('');
         } else {
-            alert("Por favor, ingresa una hora válida en formato HH:MM.");
+            alert("Por favor, ingresa una hora válida en formato HH.MM.");
         }
     };
 
@@ -144,7 +144,7 @@ export const Principal = () => {
                             <div className="agregar-tarea">
                                 <input
                                     type="text"
-                                    placeholder="Ingresá la hora (HH:MM)"
+                                    placeholder="Ingresá la hora (HH.MM)"
                                     value={nuevaHora}
                                     onChange={(e) => setNuevaHora(e.target.value)}
                                 />
