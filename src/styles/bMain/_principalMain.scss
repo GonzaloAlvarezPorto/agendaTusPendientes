@@ -10,7 +10,7 @@
         display: flex;
         flex-direction: column;
         width: 70%;
-        
+
         h2 {
             color: $letrasLogo;
             padding: 0 1.5rem 1rem 0;
@@ -25,7 +25,7 @@
             justify-content: center;
             padding: 10px;
             border-bottom: 1px solid $letrasLogo;
-            
+
             .item__hora {
                 margin: 0 1rem;
                 text-align: right;
@@ -52,8 +52,8 @@
                 border: 1px solid $letrasLogo;
             }
 
-            .eliminar{
-                margin:0;
+            .eliminar {
+                margin: 0;
             }
 
             .reiniciar__boton {
@@ -64,36 +64,62 @@
                 border: 1px solid $letrasLogo;
             }
         }
-
     }
 
-    .agregar-tarea{
-        display: flex;
-        flex-direction: column;
-        margin: 2rem;
-        padding: 1rem;
-        background-color: $fondoAgregar;
-        border:1px solid $letrasLogo;
+    .contenedor__botonera {
+        .cuerpo__informacion {
+            color: $letrasLogo;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem 2rem;
+            width: 100%;
 
-        input{
-            margin: 0.5rem;
+            .contenedorInformacion {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+                width: 100%;
+                background-color: $fondoAgregar;
+                margin: 0.25rem 0;
+                border: 1px solid $letrasLogo;
+
+                p {
+                    padding: 0.25rem 1rem;
+                }
+            }
+        }
+
+        .agregar-tarea {
+            display: flex;
+            flex-direction: column;
+            margin: 50px 2rem 1rem 2rem;
             padding: 1rem;
-            background-color: $fondoInput;
-            color: $letrasLogo;
-            border:1px solid $letrasLogo;
-        }
-
-        input::placeholder {
-            color: $letrasLogo;
-        }
-
-        button{
-            margin: 0.5rem;
-            border: none;
-            padding: 0.5rem;
-            background-color: $cabecera;
-            color: $letrasLogo;
+            background-color: $fondoAgregar;
             border: 1px solid $letrasLogo;
+
+            input {
+                margin: 0.5rem;
+                padding: 1rem;
+                background-color: $fondoInput;
+                color: $letrasLogo;
+                border: 1px solid $letrasLogo;
+            }
+
+            input::placeholder {
+                color: $letrasLogo;
+            }
+
+            button {
+                margin: 0.5rem;
+                border: none;
+                padding: 0.5rem;
+                background-color: $cabecera;
+                color: $letrasLogo;
+                border: 1px solid $letrasLogo;
+            }
         }
     }
 }

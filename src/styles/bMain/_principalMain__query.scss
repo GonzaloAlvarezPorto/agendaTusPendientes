@@ -1,4 +1,19 @@
 @media (max-width:1100px) {
+
+    .cuerpo__informacion{
+        padding: 1rem;
+        
+        .contenedorInformacion{
+            flex-direction: column;
+            justify-content: center;
+            margin: 0.25rem 0;
+            
+            p{
+               padding: 0.25rem 0.25rem;
+               text-align: center;
+            }
+        }
+    }
     .cuerpo__tareas{
         justify-content: space-around;
         flex-direction: column;

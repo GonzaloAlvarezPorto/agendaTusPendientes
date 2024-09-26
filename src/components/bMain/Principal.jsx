@@ -88,7 +88,7 @@ export const Principal = () => {
     const agregarTarea = () => {
         if (esHoraValida(nuevaHora) && nuevaDescripcion) {
             const nuevasTareas = { ...tareasDelDia, [nuevaHora]: nuevaDescripcion };
-            
+
             // Ordenar las tareas por horario
             const tareasOrdenadas = Object.entries(nuevasTareas)
                 .sort(([horaA], [horaB]) => horaA.localeCompare(horaB)) // Ordenar cronológicamente
@@ -103,6 +103,13 @@ export const Principal = () => {
             setNuevaDescripcion('');
         } else {
             alert("Por favor, ingresa una hora válida en formato HH.MM.");
+        }
+    };
+
+    // Función que maneja la pulsación de teclas
+    const manejarTeclado = (event) => {
+        if (event.key === 'Enter') {
+            agregarTarea(); // Llama a agregarTarea si se presiona Enter
         }
     };
 
@@ -141,26 +148,48 @@ export const Principal = () => {
                             </ul>
 
                             {/* Formulario para agregar nueva tarea */}
-                            <div className="agregar-tarea">
-                                <input
-                                    type="text"
-                                    placeholder="Ingresá la hora (HH.MM)"
-                                    value={nuevaHora}
-                                    onChange={(e) => setNuevaHora(e.target.value)}
-                                />
-                                <input
-                                    type="text"
-                                    placeholder="Ingresá una descripción"
-                                    value={nuevaDescripcion}
-                                    onChange={(e) => setNuevaDescripcion(e.target.value)}
-                                />
-                                <button onClick={agregarTarea}>Agregar tarea</button>
-                                <button className='reiniciar__boton' onClick={reiniciarTareas}>
-                                    Reiniciar tareas
-                                </button>
-                                <button className='reiniciar__boton' onClick={reiniciarTareasOriginales}>
-                                    Borrar todas las tareas
-                                </button>
+                            <div className='contenedor__botonera'>
+                                <div className="agregar-tarea">
+                                    <input
+                                        type="text"
+                                        placeholder="Ingresá la hora (HH.MM)"
+                                        value={nuevaHora}
+                                        onChange={(e) => setNuevaHora(e.target.value)}
+                                        onKeyDown={manejarTeclado} // Manejador para la tecla Enter en la hora
+                                    />
+                                    <input
+                                        type="text"
+                                        placeholder="Ingresá una descripción"
+                                        value={nuevaDescripcion}
+                                        onChange={(e) => setNuevaDescripcion(e.target.value)}
+                                        onKeyDown={manejarTeclado} // Manejador para la tecla Enter en la descripción
+                                    />
+                                    <button onClick={agregarTarea}>Agregar tarea</button>
+                                    <button className='reiniciar__boton' onClick={reiniciarTareas}>
+                                        Reiniciar tareas
+                                    </button>
+                                    <button className='reiniciar__boton' onClick={reiniciarTareasOriginales}>
+                                        Borrar todas las tareas
+                                    </button>
+                                </div>
+                                <div className='cuerpo__informacion'>
+                                    <div className='contenedorInformacion'>
+                                        <p>Botón "Tarea realizada"</p>
+                                        <p>Oculta la tarea hasta el mismo día de la semana siguiente.</p>
+                                    </div>
+                                    <div className='contenedorInformacion'>
+                                        <p>Botón "Quitar tarea del listado"</p>
+                                        <p>Elimina la tarea definitivamente del listado, no vuelve a aparecer cuando se reinician.</p>
+                                    </div>
+                                    <div className='contenedorInformacion'>
+                                        <p>Botón "Reiniciar tareas"</p>
+                                        <p>Reinicia el listado de tareas con las tareas agregadas inclusive. Las eliminadas no vuelven a aparecer.</p>
+                                    </div>
+                                    <div className='contenedorInformacion'>
+                                        <p>Botón "Borrar todas las tareas"</p>
+                                        <p>Vacía el listado de tareas definitivamente.</p>
+                                    </div>
+                                </div>
                             </div>
                         </>
                     ) : (
