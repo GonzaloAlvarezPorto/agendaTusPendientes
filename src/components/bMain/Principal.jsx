@@ -133,7 +133,7 @@ export const Principal = () => {
                                                 className='item__boton eliminar'
                                                 onClick={() => eliminarTarea(hora)} // Eliminar tarea al hacer clic
                                             >
-                                                Eliminar tarea
+                                                Quitar tarea del listado
                                             </button>
                                         </li>
                                     )
@@ -159,7 +159,7 @@ export const Principal = () => {
                                     Reiniciar tareas
                                 </button>
                                 <button className='reiniciar__boton' onClick={reiniciarTareasOriginales}>
-                                    Reiniciar a tareas originales
+                                    Borrar todas las tareas
                                 </button>
                             </div>
                         </>
@@ -170,4 +170,4 @@ export const Principal = () => {
             </div>
         </div>
     );
-}
+};

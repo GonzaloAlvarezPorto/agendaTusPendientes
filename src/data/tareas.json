@@ -1,101 +1,11 @@
 [
     {
-        "lunes": {
-            "07.30": "Higiene personal",
-            "08.00": "Desayuno",
-            "08.30": "Trabajar en proyectos para el portfolio",
-            "12.00": "Almuerzo",
-            "12.25": "Mateo Jardín",
-            "13.05": "Entrenamiento personal",
-            "14.00": "Tareas de limpieza",
-            "16.05": "Pagar impuestos (tener en cuenta el Monotributo, se paga aprox el 10)",
-            "16.20": "Sale Mateo Jardín",
-            "17.00": "Merienda",
-            "18.00": "Baño Mateo",
-            "20.20": "Cena",
-            "21.00": "Higiene personal"
-        },
-        "martes": {
-            "07.30": "Higiene personal",
-            "08.00": "Desayuno",
-            "08.30": "Trabajar en proyectos para el portfolio",
-            "12.00": "Almuerzo",
-            "12.25": "Mateo Jardín",
-            "13.05": "Entrenamiento personal",
-            "14.00": "Tareas de limpieza",
-            "16.05": "Pagar impuestos (tener en cuenta el Monotributo, se paga aprox el 10)",
-            "16.20": "Sale Mateo Jardín",
-            "17.00": "Merienda",
-            "18.00": "Baño Mateo",
-            "19.00": "Curso Back CoderHouse",
-            "20.20": "Cena",
-            "21.00": "Higiene personal"
-        },
-        "miercoles": {
-            "07.30": "Higiene personal",
-            "08.00": "Desayuno",
-            "08.30": "Trabajar en proyectos para el portfolio",
-            "12.00": "Almuerzo",
-            "12.25": "Mateo Jardín",
-            "13.05": "Entrenamiento personal",
-            "14.00": "Tareas de limpieza",
-            "16.05": "Pagar impuestos (tener en cuenta el Monotributo, se paga aprox el 10)",
-            "16.20": "Sale Mateo Jardín",
-            "17.00": "Merienda",
-            "18.00": "Baño Mateo",
-            "20.20": "Cena",
-            "21.00": "Higiene personal"
-        },
-        "jueves": {
-            "07.30": "Higiene personal",
-            "08.00": "Desayuno08.30 Trabajar en proyectos para el portfolio",
-            "12.00": "Almuerzo",
-            "12.25": "Mateo Jardín",
-            "13.05": "Entrenamiento personal",
-            "14.00": "Tareas de limpieza",
-            "16.05": "Pagar impuestos (tener en cuenta el Monotributo, se paga aprox el 10)",
-            "16.20": "Sale Mateo Jardín",
-            "17.00": "Merienda",
-            "18.00": "Baño Mateo",
-            "19.00": "Curso Back CoderHouse",
-            "20.20": "Cena",
-            "21.00": "Higiene personal"
-        },
-        "viernes": {
-            "07.30": "Higiene personal",
-            "08.00": "Desayuno",
-            "08.30": "Trabajar en proyectos para el portfolio",
-            "12.00": "Almuerzo",
-            "12.25": "Mateo Jardín",
-            "13.05": "Entrenamiento personal",
-            "14.00": "Tareas de limpieza",
-            "16.05": "Pagar impuestos (tener en cuenta el Monotributo, se paga aprox el 10)",
-            "16.20": "Sale Mateo Jardín",
-            "17.00": "Merienda",
-            "18.00": "Baño Mateo",
-            "20.20": "Cena",
-            "21.00": "Higiene personal"
-        },
-        "sabado": {
-            "07.30": "Higiene personal",
-            "08.00": "Desayuno",
-            "08.30": "Compras semanales",
-            "12.00": "Almuerzo",
-            "14.00": "Tareas de limpieza",
-            "16.00": "Trabajar en proyectos para el portfolio",
-            "16.05": "Pagar impuestos (tener en cuenta el Monotributo, se paga aprox el 10)",
-            "17.00": "Merienda",
-            "18.00": "Baño Mateo",
-            "20.20": "Cena",
-            "21.00": "Higiene personal"
-        },
-        "domingo": {
-            "10.00": "Higiene personal",
-            "12.00": "Almuerzo",
-            "17.00": "Merienda",
-            "18.00": "Baño Mateo",
-            "20.20": "Cena",
-            "21.00": "Higiene personal"
-        }
+        "lunes": {        },
+        "martes": {},
+        "miercoles": {},
+        "jueves": {},
+        "viernes": {},
+        "sabado": {},
+        "domingo": {}
     }
 ]

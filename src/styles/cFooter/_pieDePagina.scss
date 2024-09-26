@@ -6,4 +6,29 @@
     justify-content: center;
     padding: 1rem;
     text-align: center;
+
+    .logoGonzalo{
+        width: 30px;
+        margin-left: 5px;
+        border: 1px solid $letrasLogo;
+    }
+
+    .logoWP{
+        width: 30px;
+        margin-left: 5px;
+        border: 1px solid $letrasLogo;
+        border-radius: 100px;
+        background-color: $whatsapp;
+    }
+
+    a{
+        text-decoration: none;
+        margin: 0;
+        padding: 0;
+        color: $letrasLogo;
+    }
+
+    a:hover{
+        color:$blanco;
+    }
 }
