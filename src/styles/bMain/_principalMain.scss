@@ -11,11 +11,12 @@
         flex-direction: column;
         width: 70%;
         
-        h3 {
+        h2 {
             color: $letrasLogo;
-            border-bottom: 1px solid $letrasLogo;
-            padding: 0 1.5rem 1rem 1.5rem;
+            padding: 0 1.5rem 1rem 0;
             text-decoration: underline;
+            text-underline-offset: 10px;
+            text-align: center;
         }
 
         .tareas__item {

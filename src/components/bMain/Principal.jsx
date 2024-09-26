@@ -113,7 +113,7 @@ export const Principal = () => {
                     tareasDelDia ? (
                         <>
                             <ul className='tareas__listado'>
-                                <h3>{capitalizarPrimeraLetra(diaDeLaSemana)}</h3>
+                                <h2>{capitalizarPrimeraLetra(diaDeLaSemana)}</h2>
                                 {Object.entries(tareasDelDia).map(([hora, descripcion], i) => (
                                     visibilidad[i] && ( // Verificamos si la tarea debe ser visible
                                         <li className="tareas__item" key={i}>
