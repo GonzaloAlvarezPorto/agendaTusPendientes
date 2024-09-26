@@ -67,6 +67,9 @@
     }
 
     .contenedor__botonera {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         .cuerpo__informacion {
             color: $letrasLogo;
             display: flex;
