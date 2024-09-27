@@ -73,31 +73,64 @@ export const Principal = () => {
     };
 
     const agregarTarea = () => {
+        let horaTarea = '';
+        
         if (nuevaHora && !esHoraValida(nuevaHora)) {
             alert("El formato de la hora es inválido. Debe ser HH.MM");
             return;
         }
-
-        const horaTarea = nuevaHora ? normalizarHora(nuevaHora) : '';
-        const nuevasTareas = { ...tareasDelDia, [horaTarea]: nuevaDescripcion };
-
+    
+        if (!nuevaDescripcion) {
+            alert("La descripción es obligatoria.");
+            return; // No permite agregar la tarea si la descripción está vacía
+        }
+    
+        if (nuevaHora) {
+            horaTarea = normalizarHora(nuevaHora);
+        } else {
+            // Contador de tareas sin horario
+            const contadorSinHorario = Object.keys(tareasDelDia).filter(hora => hora.startsWith('S/H')).length + 1;
+            horaTarea = `S/H${contadorSinHorario}`; // Asigna S/H1, S/H2, etc.
+        }
+    
+        const nuevasTareas = { ...tareasDelDia };
+    
+        // Verifica si la hora ya está ocupada y encuentra el siguiente horario disponible
+        while (nuevasTareas[horaTarea]) {
+            let [horas, minutos] = horaTarea.split('.').map(Number);
+            
+            // Incrementa los minutos
+            minutos++;
+            
+            // Si los minutos alcanzan 60, reinicia a 0 y suma 1 a las horas
+            if (minutos === 60) {
+                minutos = 0;
+                horas = (horas + 1) % 24; // Asegura que no sobrepase las 23
+            }
+    
+            // Normaliza la nueva hora
+            horaTarea = `${String(horas).padStart(2, '0')}.${String(minutos).padStart(2, '0')}`;
+        }
+    
+        // Agrega la tarea en el nuevo horario disponible
+        nuevasTareas[horaTarea] = nuevaDescripcion;
+    
+        // Ordena las tareas
         const tareasOrdenadas = Object.entries(nuevasTareas)
-            .sort(([horaA], [horaB]) => {
-                if (horaA === '') return 1;
-                if (horaB === '') return -1;
-
-                return horaA.localeCompare(horaB);
-            })
+            .sort(([horaA], [horaB]) => horaA.localeCompare(horaB))
             .reduce((obj, [hora, desc]) => {
                 obj[hora] = desc;
                 return obj;
             }, {});
-
+    
         setTareasDelDia(tareasOrdenadas);
         setVisibilidad((prevVisibilidad) => [...prevVisibilidad, true]);
         setNuevaHora('');
         setNuevaDescripcion('');
     };
+    
+    
+    
 
     const manejarTeclado = (event) => {
         if (event.key === 'Enter') {
