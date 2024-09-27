@@ -61,7 +61,7 @@ export const Principal = () => {
     const [nuevaDescripcion, setNuevaDescripcion] = useState('');
 
     const esHoraValida = (hora) => {
-        const regex = /^(0[0-9]|1[0-9]|2[0-3]).[0-5][0-9]$/; // Formato estricto HH.MM
+        const regex = /^(0[0-9]|1[0-9]|2[0-3])\.[0-5][0-9]$/; // Formato estricto HH.MM
         return regex.test(hora);
     };
 
@@ -74,7 +74,12 @@ export const Principal = () => {
 
     const agregarTarea = () => {
         let horaTarea = '';
-        
+    
+        if (nuevaHora && nuevaHora.includes(':')) {
+            alert("El formato de la hora es inválido. Debe ser HH.MM (con punto).");
+            return; // Detiene la ejecución si se usa el formato con dos puntos
+        }
+    
         if (nuevaHora && !esHoraValida(nuevaHora)) {
             alert("El formato de la hora es inválido. Debe ser HH.MM");
             return;
@@ -98,10 +103,10 @@ export const Principal = () => {
         // Verifica si la hora ya está ocupada y encuentra el siguiente horario disponible
         while (nuevasTareas[horaTarea]) {
             let [horas, minutos] = horaTarea.split('.').map(Number);
-            
+    
             // Incrementa los minutos
             minutos++;
-            
+    
             // Si los minutos alcanzan 60, reinicia a 0 y suma 1 a las horas
             if (minutos === 60) {
                 minutos = 0;
@@ -129,9 +134,6 @@ export const Principal = () => {
         setNuevaDescripcion('');
     };
     
-    
-    
-
     const manejarTeclado = (event) => {
         if (event.key === 'Enter') {
             agregarTarea();

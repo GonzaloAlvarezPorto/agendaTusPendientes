@@ -1,7 +1,4 @@
 @media (max-width:1100px) {
-
-
-
     .cuerpo__tareas {
         justify-content: space-around;
         flex-direction: column;
@@ -9,23 +6,25 @@
         padding: 0;
 
         .contenedor__botonera {
+            width: 90%;
 
             .agregar-tarea {
                 width: 90vw;
-                margin: 1rem 0;
                 padding: 0.5rem;
+                margin-bottom: 1rem;
             }
 
             .cuerpo__informacion {
-                padding: 1rem;
-
+                width: 90vw;
+                margin-top: 0;
+                
                 .contenedorInformacion {
                     flex-direction: column;
                     justify-content: center;
-                    margin: 0.25rem 0;
+                    width: 100%;
+                    margin-bottom: 1px;
 
                     p {
-                        padding: 0.25rem 0.25rem;
                         text-align: center;
                     }
                 }
@@ -33,30 +32,31 @@
         }
 
         .tareas__listado {
-            width: auto;
+            width: 90%;
 
             h2 {
-                padding: 0.5rem 0;
+                padding: 0.5rem 0 1rem;
             }
 
             .tareas__item {
                 flex-direction: column;
-                width: 90vw;
                 align-items: center;
                 padding: 0;
+                width: 100%;
 
                 .item__hora {
-                    width: 100%;
-                    margin: 0.5rem 0;
+                    min-height: 30px;
+                    width: 90%;
                 }
 
                 .item__descripcion {
-                    width: 100%;
+                    min-height: 30px;
+                    width: 90%;
                 }
 
                 .item__boton {
-                    width: 100%;
                     margin: 0.5rem 0;
+                    width: 90%;
                 }
 
                 .eliminar {
@@ -64,7 +64,5 @@
                 }
             }
         }
-
-
     }
 }

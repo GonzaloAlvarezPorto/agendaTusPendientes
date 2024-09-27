@@ -9,11 +9,12 @@
     .tareas__listado {
         display: flex;
         flex-direction: column;
-        width: 60%;
+        width: 70%;
         background-color: $unBlancoMenos;
         color: $negro;
         min-height: 500px;
-        border: 2px solid $letrasLogo;
+        border: 1px solid $letrasLogo;
+        margin-top: 1rem;
 
         h2 {
             padding: 1rem 1.5rem 1.5rem 0;
@@ -33,14 +34,14 @@
             .item__hora {
                 margin: 0 1rem;
                 text-align: right;
-                width: 100px;
+                width: 20%;
                 display: flex;
                 align-items: center;
             }
 
             .item__descripcion {
                 text-align: left;
-                width: 400px;
+                width: 60%;
                 display: flex;
                 align-items: center;
             }
@@ -52,6 +53,7 @@
                 background-color: $cabecera;
                 color: $letrasLogo;
                 border: 1px solid $letrasLogo;
+                width: 20%;
             }
 
             .eliminar {
@@ -72,25 +74,25 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        width: 40%;
+        width: 30%;
+        margin-top: 1rem;
 
         .cuerpo__informacion {
             color: $letrasLogo;
             display: none;
             flex-direction: column;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
-            padding: 1rem 2rem;
-            width: 100%;
+            margin: 1rem 4rem;
 
             .contenedorInformacion {
                 display: flex;
-                flex-direction: row;
+                flex-direction: column;
                 align-items: center;
                 justify-content: space-between;
-                width: 100%;
+                width: 310px;
+                margin: 0.5rem;
                 background-color: $fondoAgregar;
-                margin: 0.25rem 0;
                 border: 1px solid $letrasLogo;
 
                 p {
@@ -102,10 +104,11 @@
         .agregar-tarea {
             display: flex;
             flex-direction: column;
-            margin: 50px 2rem 1rem 2rem;
+            margin: 0 2rem;
             padding: 1rem;
             background-color: $fondoAgregar;
             border: 1px solid $letrasLogo;
+            width: 310px;
 
             input {
                 margin: 0.5rem;
