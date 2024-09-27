@@ -17,10 +17,8 @@ export const Principal = () => {
         return tareasGuardadas ? JSON.parse(tareasGuardadas) : tareasIniciales[diaDeLaSemana] || {};
     };
 
-    // Verifica si hay tareas para el día actual
     const [tareasDelDia, setTareasDelDia] = useState(cargarTareasIniciales);
 
-    // Función para cargar el estado de visibilidad desde localStorage
     const cargarEstadoInicial = () => {
         const estadoGuardado = localStorage.getItem(`visibilidad-${diaDeLaSemana}`);
         if (estadoGuardado) {
@@ -30,27 +28,22 @@ export const Principal = () => {
         }
     };
 
-    // Estado para la visibilidad de las tareas (se carga desde localStorage)
     const [visibilidad, setVisibilidad] = useState(cargarEstadoInicial);
 
-    // Guardar el estado de visibilidad en localStorage cada vez que cambie
     useEffect(() => {
         localStorage.setItem(`visibilidad-${diaDeLaSemana}`, JSON.stringify(visibilidad));
     }, [visibilidad, diaDeLaSemana]);
 
-    // Guardar las tareas actualizadas en localStorage
     useEffect(() => {
         localStorage.setItem(`tareas-${diaDeLaSemana}`, JSON.stringify(tareasDelDia));
     }, [tareasDelDia, diaDeLaSemana]);
 
-    // Función que cambia la visibilidad de una tarea específica
     const cambiarDisplay = (index) => {
         setVisibilidad((prevVisibilidad) =>
             prevVisibilidad.map((visible, i) => (i === index ? false : visible))
         );
     };
 
-    // Función para eliminar una tarea específica
     const eliminarTarea = (hora) => {
         const nuevasTareas = { ...tareasDelDia };
         delete nuevasTareas[hora]; // Eliminar la tarea por hora
@@ -58,59 +51,66 @@ export const Principal = () => {
         setVisibilidad((prevVisibilidad) => prevVisibilidad.filter((_, i) => i !== Object.keys(tareasDelDia).indexOf(hora))); // Eliminar la visibilidad de la tarea eliminada
     };
 
-    // Función para reiniciar la visibilidad de todas las tareas
     const reiniciarTareas = () => {
         const todasVisibles = Object.keys(tareasDelDia || {}).map(() => true);
         setVisibilidad(todasVisibles);
         localStorage.setItem(`visibilidad-${diaDeLaSemana}`, JSON.stringify(todasVisibles)); // Actualizamos el localStorage
     };
 
-    // Función para reiniciar tareas a las originales
-    const reiniciarTareasOriginales = () => {
-        const tareasOriginales = tareasIniciales[diaDeLaSemana] || {};
-        setTareasDelDia(tareasOriginales);
-        setVisibilidad(Object.keys(tareasOriginales).map(() => true)); // Hacer todas las tareas visibles
-        localStorage.setItem(`tareas-${diaDeLaSemana}`, JSON.stringify(tareasOriginales)); // Actualizamos el localStorage
-        localStorage.setItem(`visibilidad-${diaDeLaSemana}`, JSON.stringify(Object.keys(tareasOriginales).map(() => true))); // Restablecemos la visibilidad
-    };
-
-    // Estados para agregar nueva tarea
     const [nuevaHora, setNuevaHora] = useState('');
     const [nuevaDescripcion, setNuevaDescripcion] = useState('');
 
-    // Función para validar el formato de la hora
     const esHoraValida = (hora) => {
-        const regex = /^(0[0-9]|1[0-9]|2[0-3]|[0-9]).[0-5][0-9]$/; // Formato HH.MM
+        const regex = /^(0[0-9]|1[0-9]|2[0-3]).[0-5][0-9]$/; // Formato estricto HH.MM
         return regex.test(hora);
     };
 
-    // Función para agregar una nueva tarea
+    const normalizarHora = (hora) => {
+        let [horas, minutos] = hora.split('.');
+        horas = horas.padStart(2, '0'); // Agrega un 0 al principio si es necesario
+        minutos = minutos.padStart(2, '0'); // Lo mismo para los minutos
+        return `${horas}.${minutos}`;
+    };
+
     const agregarTarea = () => {
-        if (esHoraValida(nuevaHora) && nuevaDescripcion) {
-            const nuevasTareas = { ...tareasDelDia, [nuevaHora]: nuevaDescripcion };
+        if (nuevaHora && !esHoraValida(nuevaHora)) {
+            alert("El formato de la hora es inválido. Debe ser HH.MM");
+            return;
+        }
 
-            // Ordenar las tareas por horario
-            const tareasOrdenadas = Object.entries(nuevasTareas)
-                .sort(([horaA], [horaB]) => horaA.localeCompare(horaB)) // Ordenar cronológicamente
-                .reduce((obj, [hora, desc]) => {
-                    obj[hora] = desc;
-                    return obj;
-                }, {});
+        const horaTarea = nuevaHora ? normalizarHora(nuevaHora) : '';
+        const nuevasTareas = { ...tareasDelDia, [horaTarea]: nuevaDescripcion };
 
-            setTareasDelDia(tareasOrdenadas);
-            setVisibilidad((prevVisibilidad) => [...prevVisibilidad, true]); // Añadir la nueva tarea como visible
-            setNuevaHora('');
-            setNuevaDescripcion('');
-        } else {
-            alert("Por favor, ingresa una hora válida en formato HH.MM.");
+        const tareasOrdenadas = Object.entries(nuevasTareas)
+            .sort(([horaA], [horaB]) => {
+                if (horaA === '') return 1;
+                if (horaB === '') return -1;
+
+                return horaA.localeCompare(horaB);
+            })
+            .reduce((obj, [hora, desc]) => {
+                obj[hora] = desc;
+                return obj;
+            }, {});
+
+        setTareasDelDia(tareasOrdenadas);
+        setVisibilidad((prevVisibilidad) => [...prevVisibilidad, true]);
+        setNuevaHora('');
+        setNuevaDescripcion('');
+    };
+
+    const manejarTeclado = (event) => {
+        if (event.key === 'Enter') {
+            agregarTarea();
         }
     };
 
-    // Función que maneja la pulsación de teclas
-    const manejarTeclado = (event) => {
-        if (event.key === 'Enter') {
-            agregarTarea(); // Llama a agregarTarea si se presiona Enter
-        }
+    // Estado para controlar la visibilidad de la sección de explicación
+    const [mostrarExplicacion, setMostrarExplicacion] = useState(false);
+
+    // Función para alternar la visibilidad de la explicación
+    const toggleExplicacion = () => {
+        setMostrarExplicacion(!mostrarExplicacion);
     };
 
     return (
@@ -122,7 +122,7 @@ export const Principal = () => {
                             <ul className='tareas__listado'>
                                 <h2>{capitalizarPrimeraLetra(diaDeLaSemana)}</h2>
                                 {Object.entries(tareasDelDia).map(([hora, descripcion], i) => (
-                                    visibilidad[i] && ( // Verificamos si la tarea debe ser visible
+                                    visibilidad[i] && (
                                         <li className="tareas__item" key={i}>
                                             <p className='item__hora'>
                                                 {hora}
@@ -132,13 +132,13 @@ export const Principal = () => {
                                             </p>
                                             <button
                                                 className='item__boton'
-                                                onClick={() => cambiarDisplay(i)} // Pasamos el índice al cambiar la visibilidad
+                                                onClick={() => cambiarDisplay(i)}
                                             >
                                                 Tarea realizada
                                             </button>
                                             <button
                                                 className='item__boton eliminar'
-                                                onClick={() => eliminarTarea(hora)} // Eliminar tarea al hacer clic
+                                                onClick={() => eliminarTarea(hora)}
                                             >
                                                 Quitar tarea del listado
                                             </button>
@@ -146,8 +146,6 @@ export const Principal = () => {
                                     )
                                 ))}
                             </ul>
-
-                            {/* Formulario para agregar nueva tarea */}
                             <div className='contenedor__botonera'>
                                 <div className="agregar-tarea">
                                     <input
@@ -155,24 +153,27 @@ export const Principal = () => {
                                         placeholder="Ingresá la hora (HH.MM)"
                                         value={nuevaHora}
                                         onChange={(e) => setNuevaHora(e.target.value)}
-                                        onKeyDown={manejarTeclado} // Manejador para la tecla Enter en la hora
+                                        onKeyDown={manejarTeclado}
                                     />
                                     <input
                                         type="text"
                                         placeholder="Ingresá una descripción"
                                         value={nuevaDescripcion}
                                         onChange={(e) => setNuevaDescripcion(e.target.value)}
-                                        onKeyDown={manejarTeclado} // Manejador para la tecla Enter en la descripción
+                                        onKeyDown={manejarTeclado}
                                     />
                                     <button onClick={agregarTarea}>Agregar tarea</button>
                                     <button className='reiniciar__boton' onClick={reiniciarTareas}>
                                         Reiniciar tareas
                                     </button>
-                                    <button className='reiniciar__boton' onClick={reiniciarTareasOriginales}>
-                                        Borrar todas las tareas
+                                    <button onClick={toggleExplicacion}>
+                                        {mostrarExplicacion ? "Ocultar explicación" : "Mostrar explicación"}
                                     </button>
                                 </div>
-                                <div className='cuerpo__informacion'>
+                                <div
+                                    className='cuerpo__informacion'
+                                    style={{ display: mostrarExplicacion ? 'flex' : 'none' }} // Cambia el display según el estado
+                                >
                                     <div className='contenedorInformacion'>
                                         <p>Botón "Tarea realizada"</p>
                                         <p>Oculta la tarea hasta el mismo día de la semana siguiente.</p>
@@ -184,10 +185,6 @@ export const Principal = () => {
                                     <div className='contenedorInformacion'>
                                         <p>Botón "Reiniciar tareas"</p>
                                         <p>Reinicia el listado de tareas con las tareas agregadas inclusive. Las eliminadas no vuelven a aparecer.</p>
-                                    </div>
-                                    <div className='contenedorInformacion'>
-                                        <p>Botón "Borrar todas las tareas"</p>
-                                        <p>Vacía el listado de tareas definitivamente.</p>
                                     </div>
                                 </div>
                             </div>
