@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import dataTareas from '../../data/tareas.json';
 
 export const Principal = () => {
-    const tareasIniciales = dataTareas[0]; // Accedemos al objeto principal que contiene los días
+    const tareasIniciales = ["domingo", "lunes", "martes", "miercoles", "jueves", "viernes", "sabado"];
     const diasSemana = ["domingo", "lunes", "martes", "miercoles", "jueves", "viernes", "sabado"];
     const fechaHoy = new Date();
     const diaDeLaSemana = diasSemana[fechaHoy.getDay()]; // Obtiene el día actual en minúsculas
@@ -74,22 +73,22 @@ export const Principal = () => {
 
     const agregarTarea = () => {
         let horaTarea = '';
-    
+
         if (nuevaHora && nuevaHora.includes(':')) {
             alert("El formato de la hora es inválido. Debe ser HH.MM (con punto).");
             return; // Detiene la ejecución si se usa el formato con dos puntos
         }
-    
+
         if (nuevaHora && !esHoraValida(nuevaHora)) {
             alert("El formato de la hora es inválido. Debe ser HH.MM");
             return;
         }
-    
+
         if (!nuevaDescripcion) {
             alert("La descripción es obligatoria.");
             return; // No permite agregar la tarea si la descripción está vacía
         }
-    
+
         if (nuevaHora) {
             horaTarea = normalizarHora(nuevaHora);
         } else {
@@ -97,29 +96,29 @@ export const Principal = () => {
             const contadorSinHorario = Object.keys(tareasDelDia).filter(hora => hora.startsWith('S/H')).length + 1;
             horaTarea = `S/H${contadorSinHorario}`; // Asigna S/H1, S/H2, etc.
         }
-    
+
         const nuevasTareas = { ...tareasDelDia };
-    
+
         // Verifica si la hora ya está ocupada y encuentra el siguiente horario disponible
         while (nuevasTareas[horaTarea]) {
             let [horas, minutos] = horaTarea.split('.').map(Number);
-    
+
             // Incrementa los minutos
             minutos++;
-    
+
             // Si los minutos alcanzan 60, reinicia a 0 y suma 1 a las horas
             if (minutos === 60) {
                 minutos = 0;
                 horas = (horas + 1) % 24; // Asegura que no sobrepase las 23
             }
-    
+
             // Normaliza la nueva hora
             horaTarea = `${String(horas).padStart(2, '0')}.${String(minutos).padStart(2, '0')}`;
         }
-    
+
         // Agrega la tarea en el nuevo horario disponible
         nuevasTareas[horaTarea] = nuevaDescripcion;
-    
+
         // Ordena las tareas
         const tareasOrdenadas = Object.entries(nuevasTareas)
             .sort(([horaA], [horaB]) => horaA.localeCompare(horaB))
@@ -127,13 +126,13 @@ export const Principal = () => {
                 obj[hora] = desc;
                 return obj;
             }, {});
-    
+
         setTareasDelDia(tareasOrdenadas);
         setVisibilidad((prevVisibilidad) => [...prevVisibilidad, true]);
         setNuevaHora('');
         setNuevaDescripcion('');
     };
-    
+
     const manejarTeclado = (event) => {
         if (event.key === 'Enter') {
             agregarTarea();
@@ -148,6 +147,12 @@ export const Principal = () => {
         setMostrarExplicacion(!mostrarExplicacion);
     };
 
+    // Función para formatear la fecha
+    const formatearFecha = (fecha) => {
+        const opciones = { year: 'numeric', month: 'long', day: 'numeric' };
+        return fecha.toLocaleDateString('es-ES', opciones); // Cambia 'es-ES' a tu localización deseada
+    };
+
     return (
         <div className='principal__cuerpo'>
             <div className='cuerpo__tareas'>
@@ -155,7 +160,9 @@ export const Principal = () => {
                     tareasDelDia ? (
                         <>
                             <ul className='tareas__listado'>
-                                <h2>{capitalizarPrimeraLetra(diaDeLaSemana)}</h2>
+                                <h2>
+                                    {capitalizarPrimeraLetra(diaDeLaSemana)} - {formatearFecha(fechaHoy)}
+                                </h2>
                                 {Object.entries(tareasDelDia).map(([hora, descripcion], i) => (
                                     visibilidad[i] && (
                                         <li className="tareas__item" key={i}>

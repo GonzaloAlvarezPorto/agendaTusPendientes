@@ -1,7 +1,7 @@
 import { BrowserRouter } from "react-router-dom";
 import { Header } from "./components/aHeader/Header";
-import { Principal } from "./components/bMain/Principal";
 import { Footer } from "./components/cFooter/Footer";
+import { Principal } from "./components/bMain/Principal"
 import { CartProvider } from "./context/CartProvider";
 import './styles/styles.scss';
 
@@ -18,4 +18,4 @@ function App() {
   )
 }
 
-export default App
+export default App;
