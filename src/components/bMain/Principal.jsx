@@ -1,10 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 export const Principal = () => {
-    const tareasIniciales = ["domingo", "lunes", "martes", "miercoles", "jueves", "viernes", "sabado"];
+    const tareasIniciales = {
+        domingo: [],
+        lunes: [],
+        martes: [],
+        miercoles: [],
+        jueves: [],
+        viernes: [],
+        sabado: []
+    };
     const diasSemana = ["domingo", "lunes", "martes", "miercoles", "jueves", "viernes", "sabado"];
     const fechaHoy = new Date();
     const diaDeLaSemana = diasSemana[fechaHoy.getDay()]; // Obtiene el día actual en minúsculas
+
+    const horaInputRef = useRef(null);
 
     const capitalizarPrimeraLetra = (str) => {
         return str.charAt(0).toUpperCase() + str.slice(1);
@@ -23,7 +33,10 @@ export const Principal = () => {
         if (estadoGuardado) {
             return JSON.parse(estadoGuardado); // Cargamos el estado guardado
         } else {
-            return Object.keys(tareasDelDia || {}).map(() => true); // Si no hay nada en localStorage, todas las tareas son visibles
+            return Object.keys(tareasDelDia || {}).reduce((acc, hora) => {
+                acc[hora] = true; // Inicializa todas las tareas como visibles
+                return acc;
+            }, {});
         }
     };
 
@@ -37,23 +50,31 @@ export const Principal = () => {
         localStorage.setItem(`tareas-${diaDeLaSemana}`, JSON.stringify(tareasDelDia));
     }, [tareasDelDia, diaDeLaSemana]);
 
-    const cambiarDisplay = (index) => {
-        setVisibilidad((prevVisibilidad) =>
-            prevVisibilidad.map((visible, i) => (i === index ? false : visible))
-        );
+    const cambiarDisplay = (hora) => {
+        setVisibilidad((prevVisibilidad) => ({
+            ...prevVisibilidad,
+            [hora]: false // Cambia solo el estado de visibilidad de la tarea correspondiente
+        }));
     };
 
     const eliminarTarea = (hora) => {
         const nuevasTareas = { ...tareasDelDia };
         delete nuevasTareas[hora]; // Eliminar la tarea por hora
         setTareasDelDia(nuevasTareas);
-        setVisibilidad((prevVisibilidad) => prevVisibilidad.filter((_, i) => i !== Object.keys(tareasDelDia).indexOf(hora))); // Eliminar la visibilidad de la tarea eliminada
+        setVisibilidad((prevVisibilidad) => {
+            const { [hora]: _, ...nuevoEstado } = prevVisibilidad; // Elimina la tarea del estado de visibilidad
+            return nuevoEstado;
+        });
     };
 
     const reiniciarTareas = () => {
-        const todasVisibles = Object.keys(tareasDelDia || {}).map(() => true);
-        setVisibilidad(todasVisibles);
-        localStorage.setItem(`visibilidad-${diaDeLaSemana}`, JSON.stringify(todasVisibles)); // Actualizamos el localStorage
+        const todasVisibles = Object.keys(tareasDelDia).reduce((acc, hora) => {
+            acc[hora] = true; // Inicializa todas las tareas como visibles
+            return acc;
+        }, {});
+    
+        setVisibilidad(todasVisibles); // Establece todas las tareas como visibles
+        localStorage.setItem(`visibilidad-${diaDeLaSemana}`, JSON.stringify(todasVisibles)); // Actualiza el localStorage
     };
 
     const [nuevaHora, setNuevaHora] = useState('');
@@ -73,22 +94,22 @@ export const Principal = () => {
 
     const agregarTarea = () => {
         let horaTarea = '';
-
+    
         if (nuevaHora && nuevaHora.includes(':')) {
             alert("El formato de la hora es inválido. Debe ser HH.MM (con punto).");
             return; // Detiene la ejecución si se usa el formato con dos puntos
         }
-
+    
         if (nuevaHora && !esHoraValida(nuevaHora)) {
             alert("El formato de la hora es inválido. Debe ser HH.MM");
             return;
         }
-
+    
         if (!nuevaDescripcion) {
             alert("La descripción es obligatoria.");
             return; // No permite agregar la tarea si la descripción está vacía
         }
-
+    
         if (nuevaHora) {
             horaTarea = normalizarHora(nuevaHora);
         } else {
@@ -96,29 +117,29 @@ export const Principal = () => {
             const contadorSinHorario = Object.keys(tareasDelDia).filter(hora => hora.startsWith('S/H')).length + 1;
             horaTarea = `S/H${contadorSinHorario}`; // Asigna S/H1, S/H2, etc.
         }
-
+    
         const nuevasTareas = { ...tareasDelDia };
-
+    
         // Verifica si la hora ya está ocupada y encuentra el siguiente horario disponible
         while (nuevasTareas[horaTarea]) {
             let [horas, minutos] = horaTarea.split('.').map(Number);
-
+    
             // Incrementa los minutos
             minutos++;
-
+    
             // Si los minutos alcanzan 60, reinicia a 0 y suma 1 a las horas
             if (minutos === 60) {
                 minutos = 0;
                 horas = (horas + 1) % 24; // Asegura que no sobrepase las 23
             }
-
+    
             // Normaliza la nueva hora
             horaTarea = `${String(horas).padStart(2, '0')}.${String(minutos).padStart(2, '0')}`;
         }
-
+    
         // Agrega la tarea en el nuevo horario disponible
         nuevasTareas[horaTarea] = nuevaDescripcion;
-
+    
         // Ordena las tareas
         const tareasOrdenadas = Object.entries(nuevasTareas)
             .sort(([horaA], [horaB]) => horaA.localeCompare(horaB))
@@ -126,11 +147,18 @@ export const Principal = () => {
                 obj[hora] = desc;
                 return obj;
             }, {});
-
+    
         setTareasDelDia(tareasOrdenadas);
-        setVisibilidad((prevVisibilidad) => [...prevVisibilidad, true]);
+    
+        // Asegúrate de mantener el mismo número de elementos en visibilidad
+        setVisibilidad((prevVisibilidad) => ({
+            ...prevVisibilidad,
+            [horaTarea]: true // Agrega la nueva tarea como visible
+        }));
+    
         setNuevaHora('');
         setNuevaDescripcion('');
+        horaInputRef.current.focus();
     };
 
     const manejarTeclado = (event) => {
@@ -164,7 +192,7 @@ export const Principal = () => {
                                     {capitalizarPrimeraLetra(diaDeLaSemana)} - {formatearFecha(fechaHoy)}
                                 </h2>
                                 {Object.entries(tareasDelDia).map(([hora, descripcion], i) => (
-                                    visibilidad[i] && (
+                                    visibilidad[hora] && (
                                         <li className="tareas__item" key={i}>
                                             <p className='item__hora'>
                                                 {hora}
@@ -173,11 +201,11 @@ export const Principal = () => {
                                                 {descripcion}
                                             </p>
                                             <button
-                                                className='item__boton'
-                                                onClick={() => cambiarDisplay(i)}
-                                            >
-                                                Tarea realizada
-                                            </button>
+                                            className='item__boton'
+                                            onClick={() => cambiarDisplay(hora)} // Cambia aquí
+                                        >
+                                            Tarea realizada
+                                        </button>
                                             <button
                                                 className='item__boton eliminar'
                                                 onClick={() => eliminarTarea(hora)}
@@ -196,6 +224,7 @@ export const Principal = () => {
                                         value={nuevaHora}
                                         onChange={(e) => setNuevaHora(e.target.value)}
                                         onKeyDown={manejarTeclado}
+                                        ref={horaInputRef} // Agrega la referencia aquí
                                     />
                                     <input
                                         type="text"
