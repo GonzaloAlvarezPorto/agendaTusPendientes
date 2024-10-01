@@ -94,52 +94,64 @@ export const Principal = () => {
 
     const agregarTarea = () => {
         let horaTarea = '';
-
+    
         if (nuevaHora && nuevaHora.includes(':')) {
             alert("El formato de la hora es inválido. Debe ser HH.MM (con punto).");
             return; // Detiene la ejecución si se usa el formato con dos puntos
         }
-
+    
         if (nuevaHora && !esHoraValida(nuevaHora)) {
             alert("El formato de la hora es inválido. Debe ser HH.MM");
             return;
         }
-
+    
         if (!nuevaDescripcion) {
             alert("La descripción es obligatoria.");
             return; // No permite agregar la tarea si la descripción está vacía
         }
-
+    
         if (nuevaHora) {
             horaTarea = normalizarHora(nuevaHora);
         } else {
-            // Contador de tareas sin horario
-            const contadorSinHorario = Object.keys(tareasDelDia).filter(hora => hora.startsWith('S/H')).length + 1;
-            horaTarea = `S/H${contadorSinHorario}`; // Asigna S/H1, S/H2, etc.
+            // Maneja tareas sin horario
+            let contadorSinHorario = 1;
+            while (tareasDelDia[`S/H${contadorSinHorario}`]) {
+                contadorSinHorario++; // Encuentra el siguiente número disponible para tareas sin horario
+            }
+            horaTarea = `S/H${contadorSinHorario}`; // Asigna el siguiente número disponible
         }
-
+    
         const nuevasTareas = { ...tareasDelDia };
-
+    
         // Verifica si la hora ya está ocupada y encuentra el siguiente horario disponible
         while (nuevasTareas[horaTarea]) {
             let [horas, minutos] = horaTarea.split('.').map(Number);
-
-            // Incrementa los minutos
-            minutos++;
-
-            // Si los minutos alcanzan 60, reinicia a 0 y suma 1 a las horas
-            if (minutos === 60) {
-                minutos = 0;
-                horas = (horas + 1) % 24; // Asegura que no sobrepase las 23
+    
+            if (!isNaN(horas) && !isNaN(minutos)) {
+                // Incrementa los minutos solo si es una tarea con horario
+                minutos++;
+    
+                // Si los minutos alcanzan 60, reinicia a 0 y suma 1 a las horas
+                if (minutos === 60) {
+                    minutos = 0;
+                    horas = (horas + 1) % 24; // Asegura que no sobrepase las 23
+                }
+    
+                // Normaliza la nueva hora
+                horaTarea = `${String(horas).padStart(2, '0')}.${String(minutos).padStart(2, '0')}`;
+            } else {
+                // Si es una tarea sin horario (S/H), encuentra el siguiente S/H disponible
+                let contadorSinHorario = 1;
+                while (nuevasTareas[`S/H${contadorSinHorario}`]) {
+                    contadorSinHorario++;
+                }
+                horaTarea = `S/H${contadorSinHorario}`;
             }
-
-            // Normaliza la nueva hora
-            horaTarea = `${String(horas).padStart(2, '0')}.${String(minutos).padStart(2, '0')}`;
         }
-
+    
         // Agrega la tarea en el nuevo horario disponible
         nuevasTareas[horaTarea] = nuevaDescripcion;
-
+    
         // Ordena las tareas
         const tareasOrdenadas = Object.entries(nuevasTareas)
             .sort(([horaA], [horaB]) => {
@@ -157,19 +169,20 @@ export const Principal = () => {
                 obj[hora] = desc;
                 return obj;
             }, {});
-
+    
         setTareasDelDia(tareasOrdenadas);
-
+    
         // Asegúrate de mantener el mismo número de elementos en visibilidad
         setVisibilidad((prevVisibilidad) => ({
             ...prevVisibilidad,
             [horaTarea]: true // Agrega la nueva tarea como visible
         }));
-
+    
         setNuevaHora('');
         setNuevaDescripcion('');
         horaInputRef.current.focus();
     };
+    
 
     const manejarTeclado = (event) => {
         if (event.key === 'Enter') {
