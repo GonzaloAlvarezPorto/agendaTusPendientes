@@ -110,6 +110,19 @@
                 border: 1px solid $letrasLogo;
             }
 
+            select {
+                margin: 0.2rem 0.5rem;
+                padding: 0.3rem;
+                background-color: $unBlancoMenos;
+                color: $negro;
+                border: 1px solid $letrasLogo;
+            }
+
+            label {
+                margin: 0 0.5rem;
+                color: $letrasLogo;
+            }
+
             input::placeholder {
                 color: $negro;
             }

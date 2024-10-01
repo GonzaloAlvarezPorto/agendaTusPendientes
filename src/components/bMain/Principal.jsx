@@ -94,7 +94,9 @@ export const Principal = () => {
 
     const agregarTarea = () => {
         let horaTarea = '';
+        const opcionSeleccionada = document.getElementById("opciones").value; // Obtener el valor seleccionado
     
+        // Validar hora
         if (nuevaHora && nuevaHora.includes(':')) {
             alert("El formato de la hora es inválido. Debe ser HH.MM (con punto).");
             return; // Detiene la ejecución si se usa el formato con dos puntos
@@ -110,6 +112,7 @@ export const Principal = () => {
             return; // No permite agregar la tarea si la descripción está vacía
         }
     
+        // Normalizar hora
         if (nuevaHora) {
             horaTarea = normalizarHora(nuevaHora);
         } else {
@@ -121,36 +124,34 @@ export const Principal = () => {
             horaTarea = `S/H${contadorSinHorario}`; // Asigna el siguiente número disponible
         }
     
-        const nuevasTareas = { ...tareasDelDia };
+        // Verificar si la hora ya existe
+        while (tareasDelDia[horaTarea]) {
+            const [horas, minutos] = horaTarea.split('.').map(Number);
+            let nuevoMinuto = minutos + 1; // Sumar un minuto
+            let nuevoHora = horas;
     
-        // Verifica si la hora ya está ocupada y encuentra el siguiente horario disponible
-        while (nuevasTareas[horaTarea]) {
-            let [horas, minutos] = horaTarea.split('.').map(Number);
-    
-            if (!isNaN(horas) && !isNaN(minutos)) {
-                // Incrementa los minutos solo si es una tarea con horario
-                minutos++;
-    
-                // Si los minutos alcanzan 60, reinicia a 0 y suma 1 a las horas
-                if (minutos === 60) {
-                    minutos = 0;
-                    horas = (horas + 1) % 24; // Asegura que no sobrepase las 23
-                }
-    
-                // Normaliza la nueva hora
-                horaTarea = `${String(horas).padStart(2, '0')}.${String(minutos).padStart(2, '0')}`;
-            } else {
-                // Si es una tarea sin horario (S/H), encuentra el siguiente S/H disponible
-                let contadorSinHorario = 1;
-                while (nuevasTareas[`S/H${contadorSinHorario}`]) {
-                    contadorSinHorario++;
-                }
-                horaTarea = `S/H${contadorSinHorario}`;
+            // Si los minutos llegan a 60, reiniciamos los minutos y sumamos una hora
+            if (nuevoMinuto === 60) {
+                nuevoMinuto = 0;
+                nuevoHora = (nuevoHora + 1) % 24; // Asegura que la hora vuelva a 0 después de 23
             }
+    
+            // Normalizamos la nueva hora
+            horaTarea = normalizarHora(`${nuevoHora}.${nuevoMinuto}`);
         }
     
-        // Agrega la tarea en el nuevo horario disponible
+        // Agregar tarea a la tarea del día actual
+        const nuevasTareas = { ...tareasDelDia };
         nuevasTareas[horaTarea] = nuevaDescripcion;
+    
+        // Si la opción es "Tarea de todos los días", agregar a todos los días de la semana
+        if (opcionSeleccionada === "tareaDeTodosLosDias") {
+            diasSemana.forEach(dia => {
+                const tareasGuardadas = JSON.parse(localStorage.getItem(`tareas-${dia}`)) || {};
+                tareasGuardadas[horaTarea] = nuevaDescripcion;
+                localStorage.setItem(`tareas-${dia}`, JSON.stringify(tareasGuardadas));
+            });
+        }
     
         // Ordena las tareas
         const tareasOrdenadas = Object.entries(nuevasTareas)
@@ -161,7 +162,6 @@ export const Principal = () => {
                 } else if (!horaA.startsWith('S/H') && horaB.startsWith('S/H')) {
                     return 1; // `S/H` va primero
                 } else {
-                    // Si ambas son del mismo tipo (ambas con horario o ambas sin horario), las ordena normalmente
                     return horaA.localeCompare(horaB);
                 }
             })
@@ -183,7 +183,6 @@ export const Principal = () => {
         horaInputRef.current.focus();
     };
     
-
     const manejarTeclado = (event) => {
         if (event.key === 'Enter') {
             agregarTarea();
@@ -241,6 +240,11 @@ export const Principal = () => {
                             </ul>
                             <div className='contenedor__botonera'>
                                 <div className="agregar-tarea">
+                                    <label htmlFor="opciones">Selecciona una opción:</label>
+                                    <select id="opciones" name="opciones">
+                                        <option value="tareaDelDia">Tarea del día</option>
+                                        <option value="tareaDeTodosLosDias">Tarea de todos los días</option>
+                                    </select>
                                     <input
                                         type="text"
                                         placeholder="Ingresá la hora (HH.MM)"
