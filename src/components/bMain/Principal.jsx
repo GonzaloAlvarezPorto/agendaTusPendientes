@@ -53,28 +53,30 @@ export const Principal = () => {
     const cambiarDisplay = (hora) => {
         setVisibilidad((prevVisibilidad) => ({
             ...prevVisibilidad,
-            [hora]: false // Cambia solo el estado de visibilidad de la tarea correspondiente
+            [hora]: false
         }));
+        alert(`Tarea marcada como realizada.`); // Alerta al marcar la tarea como realizada
     };
 
     const eliminarTarea = (hora) => {
         const nuevasTareas = { ...tareasDelDia };
-        delete nuevasTareas[hora]; // Eliminar la tarea por hora
+        delete nuevasTareas[hora]; 
         setTareasDelDia(nuevasTareas);
         setVisibilidad((prevVisibilidad) => {
-            const { [hora]: _, ...nuevoEstado } = prevVisibilidad; // Elimina la tarea del estado de visibilidad
+            const { [hora]: _, ...nuevoEstado } = prevVisibilidad; 
             return nuevoEstado;
         });
+        alert(`Tarea eliminada.`); // Alerta al eliminar la tarea
     };
 
     const reiniciarTareas = () => {
         const todasVisibles = Object.keys(tareasDelDia).reduce((acc, hora) => {
-            acc[hora] = true; // Inicializa todas las tareas como visibles
+            acc[hora] = true; 
             return acc;
         }, {});
-
-        setVisibilidad(todasVisibles); // Establece todas las tareas como visibles
-        localStorage.setItem(`visibilidad-${diaDeLaSemana}`, JSON.stringify(todasVisibles)); // Actualiza el localStorage
+        setVisibilidad(todasVisibles);
+        localStorage.setItem(`visibilidad-${diaDeLaSemana}`, JSON.stringify(todasVisibles));
+        alert("Todas las tareas han sido reiniciadas."); // Alerta al reiniciar las tareas
     };
 
     const [nuevaHora, setNuevaHora] = useState('');
@@ -94,12 +96,11 @@ export const Principal = () => {
 
     const agregarTarea = () => {
         let horaTarea = '';
-        const opcionSeleccionada = document.getElementById("opciones").value; // Obtener el valor seleccionado
+        const opcionSeleccionada = document.getElementById("opciones").value; 
     
-        // Validar hora
         if (nuevaHora && nuevaHora.includes(':')) {
             alert("El formato de la hora es inválido. Debe ser HH.MM (con punto).");
-            return; // Detiene la ejecución si se usa el formato con dos puntos
+            return;
         }
     
         if (nuevaHora && !esHoraValida(nuevaHora)) {
@@ -109,74 +110,54 @@ export const Principal = () => {
     
         if (!nuevaDescripcion) {
             alert("La descripción es obligatoria.");
-            return; // No permite agregar la tarea si la descripción está vacía
+            return;
         }
     
-        // Normalizar hora
         if (nuevaHora) {
             horaTarea = normalizarHora(nuevaHora);
         } else {
-            // Maneja tareas sin horario
             let contadorSinHorario = 1;
             while (tareasDelDia[`S/H${contadorSinHorario}`]) {
-                contadorSinHorario++; // Encuentra el siguiente número disponible para tareas sin horario
+                contadorSinHorario++;
             }
-            horaTarea = `S/H${contadorSinHorario}`; // Asigna el siguiente número disponible
+            horaTarea = `S/H${contadorSinHorario}`; 
         }
     
-        // Verificar si la hora ya existe
         while (tareasDelDia[horaTarea]) {
             const [horas, minutos] = horaTarea.split('.').map(Number);
-            let nuevoMinuto = minutos + 1; // Sumar un minuto
+            let nuevoMinuto = minutos + 1; 
             let nuevoHora = horas;
     
-            // Si los minutos llegan a 60, reiniciamos los minutos y sumamos una hora
             if (nuevoMinuto === 60) {
                 nuevoMinuto = 0;
-                nuevoHora = (nuevoHora + 1) % 24; // Asegura que la hora vuelva a 0 después de 23
+                nuevoHora = (nuevoHora + 1) % 24; 
             }
     
-            // Normalizamos la nueva hora
             horaTarea = normalizarHora(`${nuevoHora}.${nuevoMinuto}`);
         }
     
-        // Agregar tarea a la tarea del día actual
-        const nuevasTareas = { ...tareasDelDia };
-        nuevasTareas[horaTarea] = nuevaDescripcion;
-    
-        // Si la opción es "Tarea de todos los días", agregar a todos los días de la semana
-        if (opcionSeleccionada === "tareaDeTodosLosDias") {
-            diasSemana.forEach(dia => {
-                const tareasGuardadas = JSON.parse(localStorage.getItem(`tareas-${dia}`)) || {};
-                tareasGuardadas[horaTarea] = nuevaDescripcion;
-                localStorage.setItem(`tareas-${dia}`, JSON.stringify(tareasGuardadas));
-            });
+        if (opcionSeleccionada !== "tareaDeTodosLosDias" && opcionSeleccionada !== diaDeLaSemana) {
+            const tareasGuardadas = JSON.parse(localStorage.getItem(`tareas-${opcionSeleccionada}`)) || {};
+            tareasGuardadas[horaTarea] = nuevaDescripcion;
+            localStorage.setItem(`tareas-${opcionSeleccionada}`, JSON.stringify(tareasGuardadas));
         }
     
-        // Ordena las tareas
-        const tareasOrdenadas = Object.entries(nuevasTareas)
-            .sort(([horaA], [horaB]) => {
-                // Las tareas sin horario (S/H) se ordenan antes que las con horario (HH.MM)
-                if (horaA.startsWith('S/H') && !horaB.startsWith('S/H')) {
-                    return -1; // `S/H` va primero
-                } else if (!horaA.startsWith('S/H') && horaB.startsWith('S/H')) {
-                    return 1; // `S/H` va primero
-                } else {
-                    return horaA.localeCompare(horaB);
-                }
-            })
-            .reduce((obj, [hora, desc]) => {
-                obj[hora] = desc;
-                return obj;
-            }, {});
+        if (opcionSeleccionada === diaDeLaSemana || opcionSeleccionada === "todos") {
+            const nuevasTareas = { ...tareasDelDia };
+            nuevasTareas[horaTarea] = nuevaDescripcion;
+            setTareasDelDia(nuevasTareas);
+        }
     
-        setTareasDelDia(tareasOrdenadas);
-    
-        // Asegúrate de mantener el mismo número de elementos en visibilidad
         setVisibilidad((prevVisibilidad) => ({
             ...prevVisibilidad,
-            [horaTarea]: true // Agrega la nueva tarea como visible
+            [horaTarea]: true 
         }));
+    
+        if (opcionSeleccionada === "todos") {
+            alert("Tarea agregada a todos los días"); // Alerta al agregar tarea a todos los días
+        } else {
+            alert(`Tarea agregada al ${opcionSeleccionada}`); // Alerta al agregar tarea a un día específico
+        }
     
         setNuevaHora('');
         setNuevaDescripcion('');
@@ -240,10 +221,16 @@ export const Principal = () => {
                             </ul>
                             <div className='contenedor__botonera'>
                                 <div className="agregar-tarea">
-                                    <label htmlFor="opciones">Selecciona una opción:</label>
+                                    <label htmlFor="opciones">Agregar tarea a:</label>
                                     <select id="opciones" name="opciones">
-                                        <option value="tareaDelDia">Tarea del día</option>
-                                        <option value="tareaDeTodosLosDias">Tarea de todos los días</option>
+                                        <option value="todos">Todos los días</option>
+                                        <option value="lunes">Lunes</option>
+                                        <option value="martes">Martes</option>
+                                        <option value="miercoles">Miércoles</option>
+                                        <option value="jueves">Jueves</option>
+                                        <option value="viernes">Viernes</option>
+                                        <option value="sabado">Sábado</option>
+                                        <option value="domingo">Domingo</option>
                                     </select>
                                     <input
                                         type="text"
