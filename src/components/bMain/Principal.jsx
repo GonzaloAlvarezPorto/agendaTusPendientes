@@ -1,16 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
+import Swal from 'sweetalert2';
 
 export const Principal = () => {
     const tareasIniciales = {
         domingo: [],
         lunes: [],
         martes: [],
-        miercoles: [],
+        miércoles: [],
         jueves: [],
         viernes: [],
-        sabado: []
+        sábado: []
     };
-    const diasSemana = ["domingo", "lunes", "martes", "miercoles", "jueves", "viernes", "sabado"];
+    const diasSemana = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
     const fechaHoy = new Date();
     const diaDeLaSemana = diasSemana[fechaHoy.getDay()]; // Obtiene el día actual en minúsculas
 
@@ -55,28 +56,56 @@ export const Principal = () => {
             ...prevVisibilidad,
             [hora]: false
         }));
-        alert(`Tarea marcada como realizada.`); // Alerta al marcar la tarea como realizada
+
+        Swal.fire({
+            title: 'Tarea marcada como realizada',
+            icon: 'success',
+            confirmButtonText: 'Aceptar',
+            customClass: {
+                title: 'swalTitulo',
+                confirmButton: 'swalBoton',
+                popup: 'swalVentana' // Clase personalizada
+            }
+        }); // SweetAlert para tarea realizada
     };
 
     const eliminarTarea = (hora) => {
         const nuevasTareas = { ...tareasDelDia };
-        delete nuevasTareas[hora]; 
+        delete nuevasTareas[hora];
         setTareasDelDia(nuevasTareas);
         setVisibilidad((prevVisibilidad) => {
-            const { [hora]: _, ...nuevoEstado } = prevVisibilidad; 
+            const { [hora]: _, ...nuevoEstado } = prevVisibilidad;
             return nuevoEstado;
         });
-        alert(`Tarea eliminada.`); // Alerta al eliminar la tarea
+        Swal.fire({
+            title: 'Tarea eliminada',
+            icon: 'info',
+            confirmButtonText: 'Aceptar',
+            customClass: {
+                title: 'swalTitulo',
+                confirmButton: 'swalBoton',
+                popup: 'swalVentana' // Clase personalizada
+            }
+        }); // SweetAlert para eliminar tarea
     };
 
     const reiniciarTareas = () => {
         const todasVisibles = Object.keys(tareasDelDia).reduce((acc, hora) => {
-            acc[hora] = true; 
+            acc[hora] = true;
             return acc;
         }, {});
         setVisibilidad(todasVisibles);
         localStorage.setItem(`visibilidad-${diaDeLaSemana}`, JSON.stringify(todasVisibles));
-        alert("Todas las tareas han sido reiniciadas."); // Alerta al reiniciar las tareas
+        Swal.fire({
+            title: 'Todas las tareas han sido reiniciadas',
+            icon: 'warning',
+            confirmButtonText: 'Aceptar',
+            customClass: {
+                title: 'swalTitulo',
+                confirmButton: 'swalBoton',
+                popup: 'swalVentana' // Clase personalizada
+            }
+        }); // SweetAlert para reiniciar tareas
     };
 
     const [nuevaHora, setNuevaHora] = useState('');
@@ -96,23 +125,52 @@ export const Principal = () => {
 
     const agregarTarea = () => {
         let horaTarea = '';
-        const opcionSeleccionada = document.getElementById("opciones").value; 
-    
+        const opcionSeleccionada = document.getElementById("opciones").value;
+
         if (nuevaHora && nuevaHora.includes(':')) {
-            alert("El formato de la hora es inválido. Debe ser HH.MM (con punto).");
+            Swal.fire({
+                title: 'El formato de la hora es inválido',
+                text: 'Debe ser HH.MM (con punto)',
+                icon: 'error',
+                confirmButtonText: 'Aceptar',
+                customClass: {
+                    title: 'swalTitulo',
+                    confirmButton: 'swalBoton',
+                    popup: 'swalVentana' // Clase personalizada
+                }
+            });
             return;
         }
-    
+
         if (nuevaHora && !esHoraValida(nuevaHora)) {
-            alert("El formato de la hora es inválido. Debe ser HH.MM");
+            Swal.fire({
+                title: 'El formato de la hora es inválido',
+                text: 'Debe ser HH.MM',
+                icon: 'error',
+                confirmButtonText: 'Aceptar',
+                customClass: {
+                    title: 'swalTitulo',
+                    confirmButton: 'swalBoton',
+                    popup: 'swalVentana' // Clase personalizada
+                }
+            });
             return;
         }
-    
+
         if (!nuevaDescripcion) {
-            alert("La descripción es obligatoria.");
+            Swal.fire({
+                title: 'La descripción es obligatoria',
+                icon: 'warning',
+                confirmButtonText: 'Aceptar',
+                customClass: {
+                    title: 'swalTitulo',
+                    confirmButton: 'swalBoton',
+                    popup: 'swalVentana' // Clase personalizada
+                }
+            });
             return;
         }
-    
+
         if (nuevaHora) {
             horaTarea = normalizarHora(nuevaHora);
         } else {
@@ -120,50 +178,68 @@ export const Principal = () => {
             while (tareasDelDia[`S/H${contadorSinHorario}`]) {
                 contadorSinHorario++;
             }
-            horaTarea = `S/H${contadorSinHorario}`; 
+            horaTarea = `S/H${contadorSinHorario}`;
         }
-    
+
         while (tareasDelDia[horaTarea]) {
             const [horas, minutos] = horaTarea.split('.').map(Number);
-            let nuevoMinuto = minutos + 1; 
+            let nuevoMinuto = minutos + 1;
             let nuevoHora = horas;
-    
+
             if (nuevoMinuto === 60) {
                 nuevoMinuto = 0;
-                nuevoHora = (nuevoHora + 1) % 24; 
+                nuevoHora = (nuevoHora + 1) % 24;
             }
-    
+
             horaTarea = normalizarHora(`${nuevoHora}.${nuevoMinuto}`);
         }
-    
+
         if (opcionSeleccionada !== "tareaDeTodosLosDias" && opcionSeleccionada !== diaDeLaSemana) {
             const tareasGuardadas = JSON.parse(localStorage.getItem(`tareas-${opcionSeleccionada}`)) || {};
             tareasGuardadas[horaTarea] = nuevaDescripcion;
             localStorage.setItem(`tareas-${opcionSeleccionada}`, JSON.stringify(tareasGuardadas));
         }
-    
+
         if (opcionSeleccionada === diaDeLaSemana || opcionSeleccionada === "todos") {
             const nuevasTareas = { ...tareasDelDia };
             nuevasTareas[horaTarea] = nuevaDescripcion;
             setTareasDelDia(nuevasTareas);
         }
-    
+
         setVisibilidad((prevVisibilidad) => ({
             ...prevVisibilidad,
-            [horaTarea]: true 
+            [horaTarea]: true
         }));
-    
+
         if (opcionSeleccionada === "todos") {
-            alert("Tarea agregada a todos los días"); // Alerta al agregar tarea a todos los días
+            Swal.fire({
+                title: 'Tarea agregada a todos los días',
+                icon: 'success',
+                confirmButtonText: 'Aceptar',
+                customClass: {
+                    title: 'swalTitulo',
+                    confirmButton: 'swalBoton',
+                    popup: 'swalVentana' // Clase personalizada
+                }
+            });
         } else {
-            alert(`Tarea agregada al ${opcionSeleccionada}`); // Alerta al agregar tarea a un día específico
+            Swal.fire({
+                title: `Tarea agregada al ${opcionSeleccionada}`,
+                icon: 'success',
+                confirmButtonText: 'Aceptar',
+                customClass: {
+                    title: 'swalTitulo',
+                    confirmButton: 'swalBoton',
+                    popup: 'swalVentana' // Clase personalizada
+                }
+            });
         }
-    
+
         setNuevaHora('');
         setNuevaDescripcion('');
         horaInputRef.current.focus();
     };
-    
+
     const manejarTeclado = (event) => {
         if (event.key === 'Enter') {
             agregarTarea();
@@ -226,10 +302,10 @@ export const Principal = () => {
                                         <option value="todos">Todos los días</option>
                                         <option value="lunes">Lunes</option>
                                         <option value="martes">Martes</option>
-                                        <option value="miercoles">Miércoles</option>
+                                        <option value="miércoles">Miércoles</option>
                                         <option value="jueves">Jueves</option>
                                         <option value="viernes">Viernes</option>
-                                        <option value="sabado">Sábado</option>
+                                        <option value="sábado">Sábado</option>
                                         <option value="domingo">Domingo</option>
                                     </select>
                                     <input

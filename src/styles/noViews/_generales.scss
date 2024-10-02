@@ -34,7 +34,29 @@ h2 {
     border-bottom: 1px solid $negro;
 }
 
-.margenSuperior{
+.margenSuperior {
     margin-top: 1rem !important;
     color: white;
+}
+
+.swalTitulo {
+    color: $letrasLogo;
+    text-decoration: none;
+    font-size: 18px;
+    padding: 30px;
+    border-bottom: none;
+    height: 10px;
+}
+
+.swalVentana {
+    background-color: $fondoAgregar;
+    border: 2px solid $letrasLogo
+}
+
+.swalBoton {
+    background-color: $cabecera;
+    border: 1px solid $letrasLogo;
+    color: $letrasLogo;
+    border-radius: 0;
+    margin: 0;
 }
