@@ -270,30 +270,38 @@ export const Principal = () => {
                                 <h2>
                                     {capitalizarPrimeraLetra(diaDeLaSemana)} - {formatearFecha(fechaHoy)}
                                 </h2>
-                                {Object.entries(tareasDelDia).map(([hora, descripcion], i) => (
-                                    visibilidad[hora] && (
-                                        <li className="tareas__item" key={i}>
-                                            <p className='item__hora'>
-                                                {hora}
-                                            </p>
-                                            <p className='item__descripcion'>
-                                                {descripcion}
-                                            </p>
-                                            <button
-                                                className='item__boton'
-                                                onClick={() => cambiarDisplay(hora)} // Cambia aquí
-                                            >
-                                                Tarea realizada
-                                            </button>
-                                            <button
-                                                className='item__boton eliminar'
-                                                onClick={() => eliminarTarea(hora)}
-                                            >
-                                                Quitar tarea del listado
-                                            </button>
-                                        </li>
-                                    )
-                                ))}
+                                {Object.entries(tareasDelDia)
+                                    .sort(([horaA], [horaB]) => {
+                                        // Ordenar por horario
+                                        if (horaA === "S/H" && horaB === "S/H") return 0;
+                                        if (horaA === "S/H") return 1; // Mover sin horario al final
+                                        if (horaB === "S/H") return -1;
+                                        return horaA.localeCompare(horaB);
+                                    })
+                                    .map(([hora, descripcion], i) => (
+                                        visibilidad[hora] && (
+                                            <li className="tareas__item" key={i}>
+                                                <p className='item__hora'>
+                                                    {hora}
+                                                </p>
+                                                <p className='item__descripcion'>
+                                                    {descripcion}
+                                                </p>
+                                                <button
+                                                    className='item__boton'
+                                                    onClick={() => cambiarDisplay(hora)}
+                                                >
+                                                    Tarea realizada
+                                                </button>
+                                                <button
+                                                    className='item__boton eliminar'
+                                                    onClick={() => eliminarTarea(hora)}
+                                                >
+                                                    Quitar tarea del listado
+                                                </button>
+                                            </li>
+                                        )
+                                    ))}
                             </ul>
                             <div className='contenedor__botonera'>
                                 <div className="agregar-tarea">
