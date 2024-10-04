@@ -272,10 +272,15 @@ export const Principal = () => {
                                 </h2>
                                 {Object.entries(tareasDelDia)
                                     .sort(([horaA], [horaB]) => {
-                                        // Ordenar por horario
-                                        if (horaA === "S/H" && horaB === "S/H") return 0;
-                                        if (horaA === "S/H") return 1; // Mover sin horario al final
-                                        if (horaB === "S/H") return -1;
+                                        const esSinHorarioA = horaA.startsWith("S/H");
+                                        const esSinHorarioB = horaB.startsWith("S/H");
+
+                                        // Si ambas tareas son sin horario, no cambia el orden
+                                        if (esSinHorarioA && esSinHorarioB) return 0;
+                                        // Las tareas sin horario deben ir al principio
+                                        if (esSinHorarioA) return -1;
+                                        if (esSinHorarioB) return 1;
+                                        // Ordenar por horario (tareas con formato de hora)
                                         return horaA.localeCompare(horaB);
                                     })
                                     .map(([hora, descripcion], i) => (
