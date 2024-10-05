@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Swal from 'sweetalert2';
+import Toastify from 'toastify-js';
 
 export const Principal = () => {
     const tareasIniciales = {
@@ -57,16 +58,22 @@ export const Principal = () => {
             [hora]: false
         }));
 
-        Swal.fire({
-            title: 'Tarea marcada como realizada',
-            icon: 'success',
-            confirmButtonText: 'Aceptar',
-            customClass: {
-                title: 'swalTitulo',
-                confirmButton: 'swalBoton',
-                popup: 'swalVentana' // Clase personalizada
+        Toastify({
+            text: "Tarea realizada con éxito",
+            duration: 1000, // Duración de 2 segundos
+            stopOnFocus: true, // No detenerse si se pasa el mouse por encima
+            style: {
+                background: "#006400", // Estilo personalizado del toast
+                color: 'white',
+                fontSize: "12px", // Tamaño de la fuente
+                padding: "10px", // Padding del contenido
+                borderRadius: "5px", // Bordes redondeados
+                position: 'absolute',
+                left: '20%',
+                zIndex: 9999 // Para asegurarse de que esté sobre los demás elementos
             }
-        }); // SweetAlert para tarea realizada
+        }).showToast();
+
     };
 
     const eliminarTarea = (hora) => {
@@ -77,16 +84,21 @@ export const Principal = () => {
             const { [hora]: _, ...nuevoEstado } = prevVisibilidad;
             return nuevoEstado;
         });
-        Swal.fire({
-            title: 'Tarea eliminada',
-            icon: 'info',
-            confirmButtonText: 'Aceptar',
-            customClass: {
-                title: 'swalTitulo',
-                confirmButton: 'swalBoton',
-                popup: 'swalVentana' // Clase personalizada
+        Toastify({
+            text: "Tarea eliminada",
+            duration: 1000, // Duración de 2 segundos
+            stopOnFocus: true, // No detenerse si se pasa el mouse por encima
+            style: {
+                background: "#800000", // Estilo personalizado del toast
+                color: 'white',
+                fontSize: "12px", // Tamaño de la fuente
+                padding: "10px", // Padding del contenido
+                borderRadius: "5px", // Bordes redondeados
+                position: 'absolute',
+                left: '20%',
+                zIndex: 9999 // Para asegurarse de que esté sobre los demás elementos
             }
-        }); // SweetAlert para eliminar tarea
+        }).showToast();
     };
 
     const reiniciarTareas = () => {
@@ -96,16 +108,21 @@ export const Principal = () => {
         }, {});
         setVisibilidad(todasVisibles);
         localStorage.setItem(`visibilidad-${diaDeLaSemana}`, JSON.stringify(todasVisibles));
-        Swal.fire({
-            title: 'Todas las tareas han sido reiniciadas',
-            icon: 'warning',
-            confirmButtonText: 'Aceptar',
-            customClass: {
-                title: 'swalTitulo',
-                confirmButton: 'swalBoton',
-                popup: 'swalVentana' // Clase personalizada
-            }
-        }); // SweetAlert para reiniciar tareas
+        Toastify({
+                text: `Todas las tareas han sido reiniciadas`,
+                duration: 1000, // Duración de 2 segundos
+                stopOnFocus: true, // No detenerse si se pasa el mouse por encima
+                style: {
+                    background: "#FFD700", // Estilo personalizado del toast
+                    color: 'black',
+                    fontSize: "12px", // Tamaño de la fuente
+                    padding: "10px", // Padding del contenido
+                    borderRadius: "5px", // Bordes redondeados
+                    position: 'absolute',
+                    left: '20%',
+                    zIndex: 9999 // Para asegurarse de que esté sobre los demás elementos
+                }
+            }).showToast();
     };
 
     const [nuevaHora, setNuevaHora] = useState('');
@@ -212,27 +229,37 @@ export const Principal = () => {
         }));
 
         if (opcionSeleccionada === "todos") {
-            Swal.fire({
-                title: 'Tarea agregada a todos los días',
-                icon: 'success',
-                confirmButtonText: 'Aceptar',
-                customClass: {
-                    title: 'swalTitulo',
-                    confirmButton: 'swalBoton',
-                    popup: 'swalVentana' // Clase personalizada
+            Toastify({
+                text: "Tarea agregada a todos los días",
+                duration: 1000, // Duración de 2 segundos
+                stopOnFocus: true, // No detenerse si se pasa el mouse por encima
+                style: {
+                    background: "#006400", // Estilo personalizado del toast
+                    color: 'white',
+                    fontSize: "12px", // Tamaño de la fuente
+                    padding: "10px", // Padding del contenido
+                    borderRadius: "5px", // Bordes redondeados
+                    position: 'absolute',
+                    left: '20%',
+                    zIndex: 9999 // Para asegurarse de que esté sobre los demás elementos
                 }
-            });
+            }).showToast();
         } else {
-            Swal.fire({
-                title: `Tarea agregada al ${opcionSeleccionada}`,
-                icon: 'success',
-                confirmButtonText: 'Aceptar',
-                customClass: {
-                    title: 'swalTitulo',
-                    confirmButton: 'swalBoton',
-                    popup: 'swalVentana' // Clase personalizada
+            Toastify({
+                text: `Tarea agregada al ${opcionSeleccionada}`,
+                duration: 1000, // Duración de 2 segundos
+                stopOnFocus: true, // No detenerse si se pasa el mouse por encima
+                style: {
+                    background: "#006400", // Estilo personalizado del toast
+                    color: 'white',
+                    fontSize: "12px", // Tamaño de la fuente
+                    padding: "10px", // Padding del contenido
+                    borderRadius: "5px", // Bordes redondeados
+                    position: 'absolute',
+                    left: '20%',
+                    zIndex: 9999 // Para asegurarse de que esté sobre los demás elementos
                 }
-            });
+            }).showToast();
         }
 
         setNuevaHora('');
