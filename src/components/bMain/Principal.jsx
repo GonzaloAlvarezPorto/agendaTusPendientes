@@ -109,20 +109,20 @@ export const Principal = () => {
         setVisibilidad(todasVisibles);
         localStorage.setItem(`visibilidad-${diaDeLaSemana}`, JSON.stringify(todasVisibles));
         Toastify({
-                text: `Todas las tareas han sido reiniciadas`,
-                duration: 1000, // Duración de 2 segundos
-                stopOnFocus: true, // No detenerse si se pasa el mouse por encima
-                style: {
-                    background: "#FFD700", // Estilo personalizado del toast
-                    color: 'black',
-                    fontSize: "12px", // Tamaño de la fuente
-                    padding: "10px", // Padding del contenido
-                    borderRadius: "5px", // Bordes redondeados
-                    position: 'absolute',
-                    left: '20%',
-                    zIndex: 9999 // Para asegurarse de que esté sobre los demás elementos
-                }
-            }).showToast();
+            text: `Todas las tareas han sido reiniciadas`,
+            duration: 1000, // Duración de 2 segundos
+            stopOnFocus: true, // No detenerse si se pasa el mouse por encima
+            style: {
+                background: "#FFD700", // Estilo personalizado del toast
+                color: 'black',
+                fontSize: "12px", // Tamaño de la fuente
+                padding: "10px", // Padding del contenido
+                borderRadius: "5px", // Bordes redondeados
+                position: 'absolute',
+                left: '20%',
+                zIndex: 9999 // Para asegurarse de que esté sobre los demás elementos
+            }
+        }).showToast();
     };
 
     const [nuevaHora, setNuevaHora] = useState('');
@@ -143,7 +143,8 @@ export const Principal = () => {
     const agregarTarea = () => {
         let horaTarea = '';
         const opcionSeleccionada = document.getElementById("opciones").value;
-
+    
+        // Validación de hora con formato incorrecto
         if (nuevaHora && nuevaHora.includes(':')) {
             Swal.fire({
                 title: 'El formato de la hora es inválido',
@@ -158,7 +159,8 @@ export const Principal = () => {
             });
             return;
         }
-
+    
+        // Validación adicional del formato de hora
         if (nuevaHora && !esHoraValida(nuevaHora)) {
             Swal.fire({
                 title: 'El formato de la hora es inválido',
@@ -173,7 +175,8 @@ export const Principal = () => {
             });
             return;
         }
-
+    
+        // Validación de la descripción
         if (!nuevaDescripcion) {
             Swal.fire({
                 title: 'La descripción es obligatoria',
@@ -187,85 +190,81 @@ export const Principal = () => {
             });
             return;
         }
-
+    
+        // Asignar hora a la tarea
         if (nuevaHora) {
             horaTarea = normalizarHora(nuevaHora);
         } else {
+            // Generar una hora sin horario (S/H)
             let contadorSinHorario = 1;
             while (tareasDelDia[`S/H${contadorSinHorario}`]) {
                 contadorSinHorario++;
             }
             horaTarea = `S/H${contadorSinHorario}`;
         }
-
+    
+        // Verificar que la hora no esté ocupada y ajustar si es necesario
         while (tareasDelDia[horaTarea]) {
             const [horas, minutos] = horaTarea.split('.').map(Number);
             let nuevoMinuto = minutos + 1;
-            let nuevoHora = horas;
-
+            let nuevaHora = horas;
+    
             if (nuevoMinuto === 60) {
                 nuevoMinuto = 0;
-                nuevoHora = (nuevoHora + 1) % 24;
+                nuevaHora = (nuevaHora + 1) % 24;
             }
-
-            horaTarea = normalizarHora(`${nuevoHora}.${nuevoMinuto}`);
+    
+            horaTarea = normalizarHora(`${nuevaHora}.${nuevoMinuto}`);
         }
-
-        if (opcionSeleccionada !== "tareaDeTodosLosDias" && opcionSeleccionada !== diaDeLaSemana) {
+    
+        // Guardar la tarea según la opción seleccionada
+        if (opcionSeleccionada === "todos") {
+            // Itera por cada día de la semana y agrega la tarea
+            diasSemana.forEach((dia) => {
+                const tareasGuardadas = JSON.parse(localStorage.getItem(`tareas-${dia}`)) || {};
+                tareasGuardadas[horaTarea] = nuevaDescripcion;
+                localStorage.setItem(`tareas-${dia}`, JSON.stringify(tareasGuardadas));
+            });
+    
+            Toastify({
+                text: "Tarea agregada a todos los días",
+                duration: 1000, // Duración de 1 segundo
+                stopOnFocus: true,
+                style: {
+                    background: "#006400",
+                    color: 'white',
+                    fontSize: "12px",
+                    padding: "10px",
+                    borderRadius: "5px",
+                    position: 'absolute',
+                    left: '20%',
+                    zIndex: 9999
+                }
+            }).showToast();
+        } else {
+            // Agrega la tarea solo para el día específico seleccionado
             const tareasGuardadas = JSON.parse(localStorage.getItem(`tareas-${opcionSeleccionada}`)) || {};
             tareasGuardadas[horaTarea] = nuevaDescripcion;
             localStorage.setItem(`tareas-${opcionSeleccionada}`, JSON.stringify(tareasGuardadas));
         }
-
-        if (opcionSeleccionada === diaDeLaSemana || opcionSeleccionada === "todos") {
-            const nuevasTareas = { ...tareasDelDia };
-            nuevasTareas[horaTarea] = nuevaDescripcion;
-            setTareasDelDia(nuevasTareas);
-        }
-
+    
+        // Actualizar las tareas del día seleccionado
+        const nuevasTareas = { ...tareasDelDia };
+        nuevasTareas[horaTarea] = nuevaDescripcion;
+        setTareasDelDia(nuevasTareas);
+    
+        // Mostrar la tarea agregada
         setVisibilidad((prevVisibilidad) => ({
             ...prevVisibilidad,
             [horaTarea]: true
         }));
-
-        if (opcionSeleccionada === "todos") {
-            Toastify({
-                text: "Tarea agregada a todos los días",
-                duration: 1000, // Duración de 2 segundos
-                stopOnFocus: true, // No detenerse si se pasa el mouse por encima
-                style: {
-                    background: "#006400", // Estilo personalizado del toast
-                    color: 'white',
-                    fontSize: "12px", // Tamaño de la fuente
-                    padding: "10px", // Padding del contenido
-                    borderRadius: "5px", // Bordes redondeados
-                    position: 'absolute',
-                    left: '20%',
-                    zIndex: 9999 // Para asegurarse de que esté sobre los demás elementos
-                }
-            }).showToast();
-        } else {
-            Toastify({
-                text: `Tarea agregada al ${opcionSeleccionada}`,
-                duration: 1000, // Duración de 2 segundos
-                stopOnFocus: true, // No detenerse si se pasa el mouse por encima
-                style: {
-                    background: "#006400", // Estilo personalizado del toast
-                    color: 'white',
-                    fontSize: "12px", // Tamaño de la fuente
-                    padding: "10px", // Padding del contenido
-                    borderRadius: "5px", // Bordes redondeados
-                    position: 'absolute',
-                    left: '20%',
-                    zIndex: 9999 // Para asegurarse de que esté sobre los demás elementos
-                }
-            }).showToast();
-        }
-
+    
+        // Limpiar inputs
         setNuevaHora('');
         setNuevaDescripcion('');
         horaInputRef.current.focus();
     };
+    
 
     const manejarTeclado = (event) => {
         if (event.key === 'Enter') {
