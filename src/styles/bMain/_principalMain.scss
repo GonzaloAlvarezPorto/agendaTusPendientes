@@ -1,3 +1,5 @@
+@use "../noViews/_variables" as var;
+
 .cuerpo__tareas {
     display: flex;
     justify-content: center;
@@ -10,18 +12,45 @@
         display: flex;
         flex-direction: column;
         width: 70%;
-        background-color: $unBlancoMenos;
-        color: $negro;
+        background-color: var.$unBlancoMenos;
+        color: var.$negro;
         min-height: 500px;
-        border: 1px solid $letrasLogo;
+        border: 1px solid var.$letrasLogo;
         margin-top: 1rem;
+
+        .tareas__fecha {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            align-items: center;
+            border-bottom: 1px solid var.$negro;
+
+            div {
+                display: flex;
+                flex-direction: column;
+                padding: 0.5rem;
+                font-size: 1.5em;
+
+                label {
+                    width: 100%;
+                    margin: 0.5rem 0;
+                }
+
+                select {
+                    width: 100%;
+                    font-size: 0.8em;
+                    align-self: center;
+                    padding: 5px 0;
+                }
+            }
+        }
 
         .tareas__item {
             display: flex;
             flex-direction: row;
             justify-content: center;
             padding: 10px;
-            border-bottom: 1px solid $letrasLogo;
+            border-bottom: 1px solid var.$letrasLogo;
 
             .item__hora {
                 margin: 0 1rem;
@@ -42,9 +71,9 @@
                 margin: 0 1rem;
                 border: none;
                 padding: 0.5rem;
-                background-color: $cabecera;
-                color: $letrasLogo;
-                border: 1px solid $letrasLogo;
+                background-color: var.$cabecera;
+                color: var.$letrasLogo;
+                border: 1px solid var.$letrasLogo;
                 width: 20%;
             }
 
@@ -55,9 +84,9 @@
             .reiniciar__boton {
                 border: none;
                 padding: 0.5rem;
-                background-color: $cabecera;
-                color: $letrasLogo;
-                border: 1px solid $letrasLogo;
+                background-color: var.$cabecera;
+                color: var.$letrasLogo;
+                border: 1px solid var.$letrasLogo;
             }
         }
     }
@@ -70,7 +99,7 @@
         margin-top: 1rem;
 
         .cuerpo__informacion {
-            color: $letrasLogo;
+            color: var.$letrasLogo;
             display: none;
             flex-direction: column;
             justify-content: space-between;
@@ -83,9 +112,10 @@
                 align-items: center;
                 justify-content: space-between;
                 width: 310px;
-                margin: 0.5rem;
-                background-color: $fondoAgregar;
-                border: 1px solid $letrasLogo;
+                margin: 0.3rem;
+                background-color: var.$fondoAgregar;
+                border: 1px solid var.$letrasLogo;
+                padding: 0.5rem 0;
 
                 p {
                     padding: 0.25rem 1rem;
@@ -98,43 +128,43 @@
             flex-direction: column;
             margin: 0 2rem;
             padding: 1rem;
-            background-color: $fondoAgregar;
-            border: 1px solid $letrasLogo;
+            background-color: var.$fondoAgregar;
+            border: 1px solid var.$letrasLogo;
             width: 310px;
 
             input {
                 margin: 0.5rem;
                 padding: 1rem;
-                background-color: $unBlancoMenos;
-                color: $negro;
-                border: 1px solid $letrasLogo;
+                background-color: var.$unBlancoMenos;
+                color: var.$negro;
+                border: 1px solid var.$letrasLogo;
             }
 
             select {
                 margin: 0.5rem;
                 margin-bottom: 1.5rem;
                 padding: 0.3rem;
-                background-color: $unBlancoMenos;
-                color: $negro;
-                border: 1px solid $letrasLogo;
+                background-color: var.$unBlancoMenos;
+                color: var.$negro;
+                border: 1px solid var.$letrasLogo;
             }
 
             label {
                 margin: 0 0.5rem;
-                color: $letrasLogo;
+                color: var.$letrasLogo;
             }
 
             input::placeholder {
-                color: $negro;
+                color: var.$negro;
             }
 
             button {
                 margin: 0.5rem;
                 border: none;
                 padding: 0.5rem;
-                background-color: $cabecera;
-                color: $letrasLogo;
-                border: 1px solid $letrasLogo;
+                background-color: var.$cabecera;
+                color: var.$letrasLogo;
+                border: 1px solid var.$letrasLogo;
             }
         }
     }

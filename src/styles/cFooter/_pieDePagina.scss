@@ -1,7 +1,9 @@
+@use "../noViews/_variables" as var;
+
 .pieDePagina {
     display: flex;
-    background-color: $cabecera;
-    color: $letrasLogo;
+    background-color: var.$cabecera;
+    color: var.$letrasLogo;
     align-items: center;
     justify-content: center;
     padding: 1rem;
@@ -10,25 +12,25 @@
     .logoGonzalo{
         width: 30px;
         margin-left: 5px;
-        border: 1px solid $letrasLogo;
+        border: 1px solid var.$letrasLogo;
     }
 
     .logoWP{
         width: 30px;
         margin-left: 5px;
-        border: 1px solid $letrasLogo;
+        border: 1px solid var.$letrasLogo;
         border-radius: 100px;
-        background-color: $whatsapp;
+        background-color: var.$whatsapp;
     }
 
     a{
         text-decoration: none;
         margin: 0;
         padding: 0;
-        color: $letrasLogo;
+        color: var.$letrasLogo;
     }
 
     a:hover{
-        color:$blanco;
+        color:var.$blanco;
     }
 }

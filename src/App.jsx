@@ -2,19 +2,19 @@ import { BrowserRouter } from "react-router-dom";
 import { Header } from "./components/aHeader/Header";
 import { Footer } from "./components/cFooter/Footer";
 import { Principal } from "./components/bMain/Principal"
-import { CartProvider } from "./context/CartProvider";
+import { TaskProvider } from "./context/taskProvider";
 import './styles/styles.scss';
 
 function App() {
 
   return (
-    <CartProvider>
+    <TaskProvider>
       <BrowserRouter>
         <Header />
         <Principal />
         <Footer />
       </BrowserRouter>
-    </CartProvider>
+    </TaskProvider>
   )
 }
 

@@ -1,14 +1,14 @@
 //plantillas generales
-@import "./noViews/_fuentes.scss";
-@import "./noViews/_variables.scss";
-@import "./noViews/_generales.scss";
+@use "./noViews/_fuentes.scss";
+@use "./noViews/_variables.scss";
+@use "./noViews/_generales.scss";
 
 //header
-@import "./aHeader/_cabecera.scss";
+@use "./aHeader/_cabecera.scss";
 
 //main
-@import "./bMain/_principalMain.scss";
-@import "./bMain/principalMain__query.scss";
+@use "./bMain/_principalMain.scss";
+@use "./bMain/principalMain__query.scss";
 
 //footer
-@import "./cFooter/_pieDePagina.scss";
+@use "./cFooter/_pieDePagina.scss";

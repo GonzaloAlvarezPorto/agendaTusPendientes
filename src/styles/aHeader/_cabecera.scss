@@ -1,3 +1,5 @@
+@use "../noViews/_variables" as var;
+
 .encabezado {
     display: flex;
     flex-direction: row;
@@ -9,7 +11,7 @@
 
         .logo__imagen {
             height: 120px;
-            border: solid $letrasLogo 1px;
+            border: solid var.$letrasLogo 1px;
             align-self: center;
             margin: 10px;
         }

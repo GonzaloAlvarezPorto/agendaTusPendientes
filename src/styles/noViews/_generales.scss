@@ -1,3 +1,5 @@
+@use "../noViews/_variables" as var;
+
 * {
     margin: 0;
     padding: 0;
@@ -8,12 +10,12 @@
 
 html,
 body {
-    background-color: $negro;
+    background-color: var.$negro;
     min-height: 100vh;
 }
 
 .principal__cuerpo {
-    background-color: $fondoPrincipal;
+    background-color: var.$fondoPrincipal;
     display: flex;
     flex-direction: column;
 }
@@ -21,17 +23,14 @@ body {
 header {
     margin: 0;
     padding: 0;
-    background-color: $cabecera;
+    background-color: var.$cabecera;
     position: sticky;
     top: 0;
 }
 
 h2 {
     padding: 1rem 1.5rem 1.5rem 0;
-    text-decoration: underline;
-    text-underline-offset: 10px;
     text-align: center;
-    border-bottom: 1px solid $negro;
 }
 
 .margenSuperior {
@@ -40,7 +39,7 @@ h2 {
 }
 
 .swalTitulo {
-    color: $letrasLogo;
+    color: var.$letrasLogo;
     text-decoration: none;
     font-size: 18px;
     padding: 30px;
@@ -49,14 +48,14 @@ h2 {
 }
 
 .swalVentana {
-    background-color: $fondoAgregar;
-    border: 2px solid $letrasLogo
+    background-color: var.$fondoAgregar;
+    border: 2px solid var.$letrasLogo
 }
 
 .swalBoton {
-    background-color: $cabecera;
-    border: 1px solid $letrasLogo;
-    color: $letrasLogo;
+    background-color: var.$cabecera;
+    border: 1px solid var.$letrasLogo;
+    color: var.$letrasLogo;
     border-radius: 0;
     margin: 0;
 }

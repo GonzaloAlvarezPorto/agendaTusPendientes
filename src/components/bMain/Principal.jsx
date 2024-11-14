@@ -1,27 +1,14 @@
-import React, { useContext } from 'react';
-import { ListadoTareas } from './ListadoTareas';
-import { Botonera } from './Botonera';
-import { CartContext } from '../../context/CartProvider';
+import { Botonera } from "./principalComponents/botoneraComponents/Botonera";
+import { Tareas } from "./principalComponents/tareasComponents/Tareas";
 
 export const Principal = () => {
 
-    const {tareasDelDia } = useContext(CartContext)
-
     return (
-
         <div className='principal__cuerpo'>
             <div className='cuerpo__tareas'>
-                {
-                    tareasDelDia ? (
-                        <>
-                            <ListadoTareas/>
-                            <Botonera/>
-                        </>
-                    ) : (
-                        <p>No hay tareas para hoy</p>
-                    )
-                }
+                <Tareas/>
+                <Botonera/>
             </div>
-        </div>
+        </div >
     );
 };
