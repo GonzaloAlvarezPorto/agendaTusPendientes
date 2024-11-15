@@ -6,8 +6,12 @@ export const TaskContext = createContext();
 
 export const TaskProvider = ({ children }) => {
 
+    const capitalizeFirstLetter = (string) => {
+        return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+    }
+
     return (
-        <TaskContext.Provider value={{}}>
+        <TaskContext.Provider value={{capitalizeFirstLetter}}>
             {children}
         </TaskContext.Provider>
     )

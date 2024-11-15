@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
 
-export const ListadoTareas = () => {
+export const ListadoTareas = ({selectedDayTasks}) => {
     const [tareas, setTareas] = useState({});
 
     useEffect(() => {
-        // Cargar tareas desde localStorage y manejar el caso de que no sea un objeto
-        const tareasGuardadas = JSON.parse(localStorage.getItem("tareas-jueves")) || {};
-        setTareas(typeof tareasGuardadas === 'object' && !Array.isArray(tareasGuardadas) ? tareasGuardadas : {});
-    }, []);
+        // Cargar tareas del día seleccionado desde localStorage
+        if (selectedDayTasks) {
+            const tareasGuardadas = JSON.parse(localStorage.getItem(`tareas-${selectedDayTasks}`)) || {};
+            setTareas(typeof tareasGuardadas === 'object' && !Array.isArray(tareasGuardadas) ? tareasGuardadas : {});
+        }
+    }, [selectedDayTasks]); // Ejecutar cada vez que cambie selectedDayTasks
 
     return (
         <>

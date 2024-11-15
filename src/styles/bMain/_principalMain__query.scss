@@ -17,7 +17,7 @@
             .cuerpo__informacion {
                 width: 90vw;
                 margin-top: 0;
-                
+
                 .contenedorInformacion {
                     flex-direction: column;
                     justify-content: center;
@@ -33,11 +33,6 @@
 
         .tareas__listado {
             width: 90%;
-
-            h2 {
-                padding: 0.5rem 0 1rem;
-                font-size: 14px;
-            }
 
             .tareas__item {
                 flex-direction: column;
@@ -62,6 +57,18 @@
 
                 .eliminar {
                     margin-top: 0;
+                }
+            }
+        }
+    }
+}
+
+@media (max-width:319px) {
+    .cuerpo__tareas {
+        .tareas__listado {
+            .tareas__fecha {
+                div {
+                    margin: 0;
                 }
             }
         }

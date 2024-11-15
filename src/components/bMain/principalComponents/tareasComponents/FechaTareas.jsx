@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
+import { TaskContext } from '../../../../context/TaskContext';
 
-export const FechaTareas = () => {
+export const FechaTareas = ({setSelectedDayTasks}) => {
+
+    const { capitalizeFirstLetter } = useContext(TaskContext);
+
     // Fecha actual
     const fechaHoy = new Date();
-    const diasSemana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
+    const diasSemana = ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"];
     const meses = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
     
     // Día actual como valor inicial (ajuste para que Domingo sea 6)
@@ -18,9 +22,16 @@ export const FechaTareas = () => {
         const diaSeleccionadoIndex = diasSemana.indexOf(diaSemana); // Índice del día seleccionado
         let diasDiferencia = (diaSeleccionadoIndex - diaHoyIndex + 7) % 7; // Diferencia de días
 
+        const fechaObjetivo = new Date(fechaHoy);
+        fechaObjetivo.setDate(fechaHoy.getDate() + diasDiferencia);
+
+        const dia = diasSemana[fechaObjetivo.getDay() === 0 ? 6 : fechaObjetivo.getDay() - 1]; // Ajustamos el índice
+        const diaNumero = fechaObjetivo.getDate();
+        const mesNombre = meses[fechaObjetivo.getMonth()];
+
         // Si el día seleccionado es hoy, regresamos hoy
         if (diasDiferencia === 0) {
-            return `${diaHoy} ${fechaHoy.getDate()} ${meses[fechaHoy.getMonth()]}`;
+            return ` hoy ${dia} ${diaNumero} de ${mesNombre}`;
         }
         
         // Si el día seleccionado ya pasó, sumar 7 para la próxima ocurrencia
@@ -28,35 +39,35 @@ export const FechaTareas = () => {
             diasDiferencia += 7;
         }
         
-        const fechaObjetivo = new Date(fechaHoy);
-        fechaObjetivo.setDate(fechaHoy.getDate() + diasDiferencia);
-
-        const dia = diasSemana[fechaObjetivo.getDay() === 0 ? 6 : fechaObjetivo.getDay() - 1]; // Ajustamos el índice
-        const diaNumero = fechaObjetivo.getDate();
-        const mesNombre = meses[fechaObjetivo.getMonth()];
         
-        return `${dia} ${diaNumero} ${mesNombre}`;
+        return `l ${dia} ${diaNumero} de ${mesNombre}`;
     };
 
-    // Maneja el cambio en el selector
-    const handleSelectChange = (event) => {
-        setDiaSeleccionado(event.target.value);
-    };
-
+    
     // Define el texto a mostrar en el h2, dependiendo del día seleccionado
     const diaAMostrar = calcularFechaProxima(diaSeleccionado);
+    
+    const handleChange = (event) => {
+        const selectedDay = event.target.value.toLowerCase();
+        setDiaSeleccionado(selectedDay);
+        setSelectedDayTasks(selectedDay);
+    }
 
     return (
         <div className='tareas__fecha'>
             <h2>
-                Viendo tareas del {diaAMostrar}
+                Tareas de{diaAMostrar}
             </h2>
             <div>
-                <label htmlFor="verTareas">Ver tareas del</label>
-                <select id="verTareas" name="verTareas" onChange={handleSelectChange} value={diaSeleccionado}>
-                    {diasSemana.map((dia, index) => (
-                        <option key={index} value={dia}>{dia}</option>
-                    ))}
+                <label htmlFor="verTareas">Mostrar tareas de</label>
+                <select id="verTareas" name="verTareas" onChange={handleChange} value={diaSeleccionado}>
+                    {diasSemana.map((dia, index) => {
+                        // Si el día de la opción es el día actual, mostramos "hoy"
+                        const diaMostrar = dia === diaHoy ? `Hoy (${dia})` : capitalizeFirstLetter(dia);
+                        return (
+                            <option key={index} value={dia}>{diaMostrar}</option>
+                        );
+                    })}
                 </select>
             </div>
         </div>

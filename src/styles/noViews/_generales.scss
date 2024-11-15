@@ -29,9 +29,16 @@ header {
 }
 
 h2 {
-    padding: 1rem 1.5rem 1.5rem 0;
-    text-align: center;
+    font-size: 22px;
+    padding: 10px;
 }
+
+@media (max-width:550px) {
+    h2 {
+        font-size: 14px;
+    }
+}
+
 
 .margenSuperior {
     margin-top: 1rem !important;

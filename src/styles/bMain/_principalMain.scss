@@ -21,25 +21,21 @@
         .tareas__fecha {
             display: flex;
             flex-direction: row;
-            justify-content: space-around;
+            justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid var.$negro;
-
+            
             div {
                 display: flex;
                 flex-direction: column;
-                padding: 0.5rem;
-                font-size: 1.5em;
-
+                font-size: 15px;
+                padding: 10px;
+                
                 label {
                     width: 100%;
-                    margin: 0.5rem 0;
                 }
 
                 select {
-                    width: 100%;
-                    font-size: 0.8em;
-                    align-self: center;
                     padding: 5px 0;
                 }
             }
