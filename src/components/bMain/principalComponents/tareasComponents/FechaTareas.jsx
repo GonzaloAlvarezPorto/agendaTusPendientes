@@ -1,8 +1,7 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { TaskContext } from '../../../../context/TaskContext';
 
-export const FechaTareas = ({setSelectedDayTasks}) => {
-
+export const FechaTareas = ({ setSelectedDayTasks }) => {
     const { capitalizeFirstLetter } = useContext(TaskContext);
 
     // Fecha actual
@@ -39,19 +38,22 @@ export const FechaTareas = ({setSelectedDayTasks}) => {
             diasDiferencia += 7;
         }
         
-        
         return `l ${dia} ${diaNumero} de ${mesNombre}`;
     };
 
-    
     // Define el texto a mostrar en el h2, dependiendo del día seleccionado
     const diaAMostrar = calcularFechaProxima(diaSeleccionado);
-    
+
+    // UseEffect para establecer el día seleccionado al cargar la app
+    useEffect(() => {
+        setSelectedDayTasks(diaHoy); // Establece el día de hoy al cargar
+    }, [diaHoy, setSelectedDayTasks]);
+
     const handleChange = (event) => {
         const selectedDay = event.target.value.toLowerCase();
         setDiaSeleccionado(selectedDay);
-        setSelectedDayTasks(selectedDay);
-    }
+        setSelectedDayTasks(selectedDay); // Cambia las tareas basadas en el día seleccionado
+    };
 
     return (
         <div className='tareas__fecha'>
@@ -72,4 +74,4 @@ export const FechaTareas = ({setSelectedDayTasks}) => {
             </div>
         </div>
     );
-}
+};
