@@ -4,72 +4,102 @@ export const ListadoTareas = ({ selectedDayTasks }) => {
     const [tareas, setTareas] = useState({});
 
     useEffect(() => {
-        // Función para actualizar las tareas desde localStorage
         const actualizarTareas = () => {
             if (selectedDayTasks) {
                 const tareasPendientes = JSON.parse(localStorage.getItem('tareas-pendientes')) || {};
                 const tareasDelDia = JSON.parse(localStorage.getItem(`tareas-${selectedDayTasks}`)) || {};
 
-                // Combina las tareas pendientes con las tareas del día seleccionado
                 const tareasCombinadas = { ...tareasPendientes, ...tareasDelDia };
                 setTareas(tareasCombinadas);
             }
         };
 
-        // Actualizar tareas inmediatamente al cargar
         actualizarTareas();
-
-        // Actualizar tareas cada 1 segundo
         const interval = setInterval(actualizarTareas, 1000);
 
-        // Limpiar el intervalo al desmontar el componente
         return () => clearInterval(interval);
     }, [selectedDayTasks]);
 
-    // Función para ordenar las tareas
-    const ordenarTareas = (tareas) => {
-        const tareasConHorario = [];
-        const tareasSinHorario = [];
+    // Función para eliminar una tarea
+    const eliminarTarea = (clave) => {
+        const tareasPendientes = JSON.parse(localStorage.getItem('tareas-pendientes')) || {};
+        const tareasDelDia = JSON.parse(localStorage.getItem(`tareas-${selectedDayTasks}`)) || {};
 
-        // Separa las tareas con horario y sin horario
-        for (const [hora, descripcion] of Object.entries(tareas)) {
-            if (hora === 's/h') {
-                tareasSinHorario.push({ descripcion, hora });
+        if (clave.startsWith('T/P')) {
+            // Eliminar tarea pendiente
+            delete tareasPendientes[clave];
+            localStorage.setItem('tareas-pendientes', JSON.stringify(tareasPendientes));
+        } else if (tareasDelDia[clave]) {
+            // Eliminar tarea del día seleccionado
+            delete tareasDelDia[clave];
+            localStorage.setItem(`tareas-${selectedDayTasks}`, JSON.stringify(tareasDelDia));
+        }
+
+        const tareasCombinadas = { ...tareasPendientes, ...tareasDelDia };
+        setTareas(tareasCombinadas);
+    };
+
+    const ordenarTareas = (tareas) => {
+        const tareasPendientes = [];
+        const tareasSinHorario = [];
+        const tareasConHorario = [];
+
+        // Clasificar tareas
+        for (const [clave, descripcion] of Object.entries(tareas)) {
+            if (clave.startsWith('T/P')) {
+                tareasPendientes.push({ clave, descripcion });
+            } else if (clave.startsWith('S/H')) {
+                tareasSinHorario.push({ clave, descripcion });
             } else {
-                tareasConHorario.push({ hora, descripcion });
+                tareasConHorario.push({ hora: clave, descripcion });
             }
         }
 
-        // Ordena las tareas con hora de menor a mayor
+        // Ordenar las tareas pendientes (T/P)
+        tareasPendientes.sort((a, b) => {
+            const numA = parseInt(a.clave.replace('T/P', ''), 10);
+            const numB = parseInt(b.clave.replace('T/P', ''), 10);
+            return numA - numB;
+        });
+
+        // Ordenar las tareas sin horario (s/h)
+        tareasSinHorario.sort((a, b) => {
+            const numA = parseInt(a.clave.replace('S/H', ''), 10);
+            const numB = parseInt(b.clave.replace('S/H', ''), 10);
+            return numA - numB;
+        });
+
+        // Ordenar las tareas con horario
         tareasConHorario.sort((a, b) => {
             const [horaA, minutoA] = a.hora.split(':').map(Number);
             const [horaB, minutoB] = b.hora.split(':').map(Number);
             return horaA !== horaB ? horaA - horaB : minutoA - minutoB;
         });
 
-        // Ordena las tareas pendientes (sin hora) por el orden que prefieras, aquí ordenadas alfabéticamente
-        tareasSinHorario.sort((a, b) => a.descripcion.localeCompare(b.descripcion));
-
-        // Combina las tareas
-        return [...tareasSinHorario, ...tareasConHorario];
+        // Combinar las tareas en el orden deseado
+        return [...tareasPendientes, ...tareasSinHorario, ...tareasConHorario];
     };
 
-    // Ordenar tareas antes de mostrarlas
     const tareasOrdenadas = ordenarTareas(tareas);
 
     return (
         <>
             {tareasOrdenadas.length > 0 ? (
-                tareasOrdenadas.map(({ hora, descripcion }, index) => (
+                tareasOrdenadas.map(({ clave, hora, descripcion }, index) => (
                     <li key={index} className="tareas__item">
-                        <p className="item__hora">{hora === 's/h' ? 'Sin horario' : hora}</p>
+                        <p className="item__hora">{clave || hora || 'Sin horario'}</p>
                         <p className="item__descripcion">{descripcion}</p>
                         <button className="item__boton">Tarea realizada</button>
-                        <button className="item__boton eliminar">Quitar tarea del listado</button>
+                        <button
+                            className="item__boton eliminar"
+                            onClick={() => eliminarTarea(clave || hora)}
+                        >
+                            Quitar tarea del listado
+                        </button>
                     </li>
                 ))
             ) : (
-                <p className='tareas__item'>No hay tareas para mostrar.</p>
+                <p className="tareas__item">No hay tareas para mostrar.</p>
             )}
         </>
     );
