@@ -26,35 +26,33 @@ export const ListadoTareas = ({ selectedDayTasks }) => {
             console.error('La clave no está definida');
             return;
         }
-   
+
         const tareasPendientes = JSON.parse(localStorage.getItem('tareas-pendientes')) || {};
         const tareasDelDia = JSON.parse(localStorage.getItem(`tareas-${selectedDayTasks}`)) || {};
         const visibilidadTareasDelDia = JSON.parse(localStorage.getItem(`visibilidad-${selectedDayTasks}`)) || {};
-   
-        if (clave.startsWith('T/P')) {
+
+        if (/^T\/P/.test(clave)) {
             // Eliminar tarea pendiente
             delete tareasPendientes[clave];
             localStorage.setItem('tareas-pendientes', JSON.stringify(tareasPendientes));
         } else if (tareasDelDia[clave]) {
             // Eliminar tarea del día seleccionado
             delete tareasDelDia[clave];
-   
+
             // Eliminar la visibilidad correspondiente a la tarea
             if (visibilidadTareasDelDia.hasOwnProperty(clave)) {
                 delete visibilidadTareasDelDia[clave];
             }
-   
+
             // Actualizar localStorage
             localStorage.setItem(`tareas-${selectedDayTasks}`, JSON.stringify(tareasDelDia));
             localStorage.setItem(`visibilidad-${selectedDayTasks}`, JSON.stringify(visibilidadTareasDelDia));
         }
-   
+
         // Combinar tareas restantes y actualizar el estado
         const tareasCombinadas = { ...tareasPendientes, ...tareasDelDia, ...visibilidadTareasDelDia };
         setTareas(tareasCombinadas);
     };
-   
-
 
     // Función para marcar tarea como realizada
     const tareaRealizada = (clave) => {
@@ -77,13 +75,13 @@ export const ListadoTareas = ({ selectedDayTasks }) => {
         const tareasSinHorario = [];
         const tareasConHorario = [];
 
-        // Clasificar tareas
+        // Clasificar tareas usando expresiones regulares
         for (const [clave, descripcion] of Object.entries(tareas)) {
-            if (clave.startsWith('T/P')) {
+            if (/^T\/P/.test(clave)) {
                 tareasPendientes.push({ clave, descripcion });
-            } else if (clave.startsWith('S/H')) {
+            } else if (/^S\/H/.test(clave)) {
                 tareasSinHorario.push({ clave, descripcion });
-            } else {
+            } else if (/^\d{2}:\d{2}$/.test(clave)) {
                 tareasConHorario.push({ hora: clave, descripcion });
             }
         }
@@ -95,7 +93,7 @@ export const ListadoTareas = ({ selectedDayTasks }) => {
             return numA - numB;
         });
 
-        // Ordenar las tareas sin horario (s/h)
+        // Ordenar las tareas sin horario (S/H)
         tareasSinHorario.sort((a, b) => {
             const numA = parseInt(a.clave.replace('S/H', ''), 10);
             const numB = parseInt(b.clave.replace('S/H', ''), 10);
@@ -121,13 +119,13 @@ export const ListadoTareas = ({ selectedDayTasks }) => {
                 tareasOrdenadas.map(({ clave, hora, descripcion }, index) => {
                     const visibilidadDia = JSON.parse(localStorage.getItem(`visibilidad-${selectedDayTasks}`)) || {};
                     const tareaClave = clave || hora; // Para las tareas con horario, usar la hora como clave
-    
+
                     // Verificar si la tarea es visible
                     const tareaVisible = visibilidadDia[tareaClave] !== false;
-    
+
                     // Verificar si la clave pertenece a una tarea pendiente (T/P)
-                    const esTareaPendiente = clave.startsWith('T/P');
-    
+                    const esTareaPendiente = /^T\/P/.test(clave);
+
                     return (
                         tareaVisible && (
                             <li key={index} className="tareas__item">
@@ -151,8 +149,7 @@ export const ListadoTareas = ({ selectedDayTasks }) => {
                     );
                 })
             ) : (
-                <>
-                </>
+                <></>
             )}
         </>
     );
