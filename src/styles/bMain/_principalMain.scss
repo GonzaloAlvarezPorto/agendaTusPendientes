@@ -73,6 +73,12 @@
                 width: 20%;
             }
 
+            .item__boton--gris {
+                background-color: #d1d1d1; /* Color gris cuando está pendiente */
+                color: #6d6d6d; /* Texto gris */
+                border: 1px solid #3d3d3d;
+            }
+
             .eliminar {
                 margin: 0;
             }

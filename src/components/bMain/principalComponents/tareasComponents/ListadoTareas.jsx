@@ -115,16 +115,23 @@ export const ListadoTareas = ({ selectedDayTasks }) => {
                 tareasOrdenadas.map(({ clave, hora, descripcion }, index) => {
                     const visibilidadDia = JSON.parse(localStorage.getItem(`visibilidad-${selectedDayTasks}`)) || {};
                     const tareaClave = clave || hora; // Para las tareas con horario, usar la hora como clave
-
+    
                     // Verificar si la tarea es visible
                     const tareaVisible = visibilidadDia[tareaClave] !== false;
-
+    
+                    // Verificar si la clave pertenece a una tarea pendiente (T/P)
+                    const esTareaPendiente = clave.startsWith('T/P');
+    
                     return (
                         tareaVisible && (
                             <li key={index} className="tareas__item">
                                 <p className="item__hora">{clave || hora || 'Sin horario'}</p>
                                 <p className="item__descripcion">{descripcion}</p>
-                                <button className="item__boton" onClick={() => tareaRealizada(tareaClave)}>
+                                <button
+                                    className={`item__boton ${esTareaPendiente ? 'item__boton--gris' : ''}`}
+                                    onClick={() => !esTareaPendiente && tareaRealizada(tareaClave)}
+                                    disabled={esTareaPendiente}
+                                >
                                     Tarea realizada
                                 </button>
                                 <button
