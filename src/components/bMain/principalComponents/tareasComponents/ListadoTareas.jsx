@@ -39,6 +39,22 @@ export const ListadoTareas = ({ selectedDayTasks }) => {
         setTareas(tareasCombinadas);
     };
 
+    // Función para marcar tarea como realizada
+    const tareaRealizada = (clave) => {
+        const visibilidadDia = JSON.parse(localStorage.getItem(`visibilidad-${selectedDayTasks}`)) || {};
+        visibilidadDia[clave] = false;  // Marcar tarea como oculta
+
+        // Guardar en localStorage
+        localStorage.setItem(`visibilidad-${selectedDayTasks}`, JSON.stringify(visibilidadDia));
+
+        // Actualizar el estado de las tareas
+        setTareas((prevTareas) => {
+            const tareasActualizadas = { ...prevTareas };
+            delete tareasActualizadas[clave];  // Eliminar la tarea del estado
+            return tareasActualizadas;
+        });
+    };
+
     const ordenarTareas = (tareas) => {
         const tareasPendientes = [];
         const tareasSinHorario = [];
@@ -85,19 +101,31 @@ export const ListadoTareas = ({ selectedDayTasks }) => {
     return (
         <>
             {tareasOrdenadas.length > 0 ? (
-                tareasOrdenadas.map(({ clave, hora, descripcion }, index) => (
-                    <li key={index} className="tareas__item">
-                        <p className="item__hora">{clave || hora || 'Sin horario'}</p>
-                        <p className="item__descripcion">{descripcion}</p>
-                        <button className="item__boton">Tarea realizada</button>
-                        <button
-                            className="item__boton eliminar"
-                            onClick={() => eliminarTarea(clave || hora)}
-                        >
-                            Quitar tarea del listado
-                        </button>
-                    </li>
-                ))
+                tareasOrdenadas.map(({ clave, hora, descripcion }, index) => {
+                    const visibilidadDia = JSON.parse(localStorage.getItem(`visibilidad-${selectedDayTasks}`)) || {};
+                    const tareaClave = clave || hora; // Para las tareas con horario, usar la hora como clave
+
+                    // Verificar si la tarea es visible
+                    const tareaVisible = visibilidadDia[tareaClave] !== false;
+
+                    return (
+                        tareaVisible && (
+                            <li key={index} className="tareas__item">
+                                <p className="item__hora">{clave || hora || 'Sin horario'}</p>
+                                <p className="item__descripcion">{descripcion}</p>
+                                <button className="item__boton" onClick={() => tareaRealizada(tareaClave)}>
+                                    Tarea realizada
+                                </button>
+                                <button
+                                    className="item__boton eliminar"
+                                    onClick={() => eliminarTarea(tareaClave)}
+                                >
+                                    Quitar tarea del listado
+                                </button>
+                            </li>
+                        )
+                    );
+                })
             ) : (
                 <p className="tareas__item">No hay tareas para mostrar.</p>
             )}
