@@ -1,10 +1,10 @@
 import React from 'react'
 import { AgregarTarea } from './AgregarTarea'
 
-export const Botonera = () => {
+export const Botonera = ({setSelectedDayTasks, selectedDayTasks}) => {
     return (
         <div className='contenedor__botonera'>
-            <AgregarTarea/>
+            <AgregarTarea setSelectedDayTasks={setSelectedDayTasks} selectedDayTasks={selectedDayTasks}/>
         </div>
     )
 }

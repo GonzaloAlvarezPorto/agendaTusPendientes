@@ -13,7 +13,7 @@ export const Instrucciones = ({mostrar}) => {
             </div>
             <div className='contenedorInformacion'>
                 <p>Botón "Reiniciar tareas"</p>
-                <p>Reinicia el listado de tareas con las tareas agregadas inclusive. Las eliminadas no vuelven a aparecer.</p>
+                <p>Reinicia el listado de tareas del día a mostrar con las tareas agregadas inclusive. Las eliminadas no vuelven a aparecer.</p>
             </div>
         </div>
     )

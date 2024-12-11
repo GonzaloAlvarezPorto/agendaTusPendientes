@@ -24,6 +24,7 @@ export const ListadoTareas = ({ selectedDayTasks }) => {
     const eliminarTarea = (clave) => {
         const tareasPendientes = JSON.parse(localStorage.getItem('tareas-pendientes')) || {};
         const tareasDelDia = JSON.parse(localStorage.getItem(`tareas-${selectedDayTasks}`)) || {};
+        const visibilidadTareasDelDia = JSON.parse(localStorage.getItem(`visibilidad-${selectedDayTasks}`)) || {};
 
         if (clave.startsWith('T/P')) {
             // Eliminar tarea pendiente
@@ -32,12 +33,22 @@ export const ListadoTareas = ({ selectedDayTasks }) => {
         } else if (tareasDelDia[clave]) {
             // Eliminar tarea del día seleccionado
             delete tareasDelDia[clave];
+
+            // Eliminar la visibilidad correspondiente a la tarea
+            if (visibilidadTareasDelDia.hasOwnProperty(clave)) {
+                delete visibilidadTareasDelDia[clave];
+            }
+
+            // Actualizar localStorage
             localStorage.setItem(`tareas-${selectedDayTasks}`, JSON.stringify(tareasDelDia));
+            localStorage.setItem(`visibilidad-${selectedDayTasks}`, JSON.stringify(visibilidadTareasDelDia));
         }
 
-        const tareasCombinadas = { ...tareasPendientes, ...tareasDelDia };
+        // Combinar tareas restantes y actualizar el estado
+        const tareasCombinadas = { ...tareasPendientes, ...tareasDelDia, ...visibilidadTareasDelDia };
         setTareas(tareasCombinadas);
     };
+
 
     // Función para marcar tarea como realizada
     const tareaRealizada = (clave) => {
@@ -127,7 +138,8 @@ export const ListadoTareas = ({ selectedDayTasks }) => {
                     );
                 })
             ) : (
-                <p className="tareas__item">No hay tareas para mostrar.</p>
+                <>
+                </>
             )}
         </>
     );
