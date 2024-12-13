@@ -128,23 +128,25 @@ export const ListadoTareas = ({ selectedDayTasks }) => {
 
                     return (
                         tareaVisible && (
-                            <li key={index} className="tareas__item">
-                                <p className="item__hora">{clave || hora || 'Sin horario'}</p>
-                                <p className="item__descripcion">{descripcion}</p>
-                                <button
-                                    className={`item__boton ${esTareaPendiente ? 'item__boton--gris' : ''}`}
-                                    onClick={() => !esTareaPendiente && tareaRealizada(tareaClave)}
-                                    disabled={esTareaPendiente}
-                                >
-                                    Tarea realizada
-                                </button>
-                                <button
-                                    className="item__boton eliminar"
-                                    onClick={() => eliminarTarea(tareaClave)}
-                                >
-                                    Quitar tarea del listado
-                                </button>
-                            </li>
+                            <ul>
+                                <li key={index} className="tareas__item">
+                                    <p className="item__hora">{clave || hora || 'Sin horario'}</p>
+                                    <p className="item__descripcion">{descripcion}</p>
+                                    <button
+                                        className={`item__boton ${esTareaPendiente ? 'item__boton--gris' : ''}`}
+                                        onClick={() => !esTareaPendiente && tareaRealizada(tareaClave)}
+                                        disabled={esTareaPendiente}
+                                    >
+                                        Tarea realizada
+                                    </button>
+                                    <button
+                                        className="item__boton eliminar"
+                                        onClick={() => eliminarTarea(tareaClave)}
+                                    >
+                                        Quitar tarea del listado
+                                    </button>
+                                </li>
+                            </ul>
                         )
                     );
                 })
