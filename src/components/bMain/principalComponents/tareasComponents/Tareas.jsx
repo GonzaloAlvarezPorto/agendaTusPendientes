@@ -5,9 +5,9 @@ import { ListadoTareas } from './ListadoTareas'
 export const Tareas = ({setSelectedDayTasks, selectedDayTasks}) => {
 
     return (
-        <ul className='tareas__listado'>
+        <div className='tareas__listado'>
             <FechaTareas setSelectedDayTasks={setSelectedDayTasks} />
             <ListadoTareas selectedDayTasks={selectedDayTasks} />
-        </ul>
+        </div>
     )
 }
