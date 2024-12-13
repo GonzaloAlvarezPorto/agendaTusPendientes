@@ -57,9 +57,9 @@ export const FechaTareas = ({ setSelectedDayTasks }) => {
 
     return (
         <div className='tareas__fecha'>
-            <h2>
+            <h1>
                 Tareas de{diaAMostrar}
-            </h2>
+            </h1>
             <div>
                 <label htmlFor="verTareas">Mostrar tareas de</label>
                 <select id="verTareas" name="verTareas" onChange={handleChange} value={diaSeleccionado}>

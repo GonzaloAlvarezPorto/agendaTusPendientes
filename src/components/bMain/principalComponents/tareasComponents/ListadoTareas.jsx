@@ -128,7 +128,7 @@ export const ListadoTareas = ({ selectedDayTasks }) => {
 
                     return (
                         tareaVisible && (
-                            <ul>
+                            <ul key={index}>
                                 <li key={index} className="tareas__item">
                                     <p className="item__hora">{clave || hora || 'Sin horario'}</p>
                                     <p className="item__descripcion">{descripcion}</p>
