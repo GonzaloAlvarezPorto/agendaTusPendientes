@@ -41,6 +41,18 @@
             }
         }
 
+        .tareas__summary{
+            display: flex;
+            flex-direction: row;
+            justify-content: start;
+            padding: 10px 26px;
+            border-bottom: 1px solid var.$letrasLogo;
+        }
+
+        .pendiente{
+            background-color: var.$crema;
+        }
+
         .tareas__item {
             display: flex;
             flex-direction: row;

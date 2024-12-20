@@ -114,28 +114,67 @@ export const ListadoTareas = ({ selectedDayTasks }) => {
     const tareasOrdenadas = ordenarTareas(tareas);
 
     return (
-        <>
-            {tareasOrdenadas.length > 0 ? (
-                tareasOrdenadas.map(({ clave, hora, descripcion }, index) => {
+        <div>
+            {/* Tareas Pendientes en un desplegable */}
+            {tareasOrdenadas.filter(({ clave }) => /^T\/P/.test(clave)).length > 0 && (
+                <details>
+                    <summary className="tareas__summary">▶ Tareas Pendientes</summary>
+                    {tareasOrdenadas
+                        .filter(({ clave }) => /^T\/P/.test(clave))  // Filtrar solo tareas pendientes
+                        .map(({ clave, descripcion }, index) => {
+                            const visibilidadDia = JSON.parse(localStorage.getItem(`visibilidad-${selectedDayTasks}`)) || {};
+                            const tareaClave = clave;
+
+                            // Verificar si la tarea es visible
+                            const tareaVisible = visibilidadDia[tareaClave] !== false;
+                            const esTareaPendiente = /^T\/P/.test(tareaClave);
+
+                            return (
+                                tareaVisible && (
+                                    <ul key={index}>
+                                        <li className="tareas__item pendiente">
+                                            <p className="item__hora">{clave}</p>
+                                            <p className="item__descripcion">{descripcion}</p>
+                                            <button
+                                                className={`item__boton ${esTareaPendiente ? 'item__boton--gris' : ''}`}
+                                                onClick={() => !esTareaPendiente && tareaRealizada(tareaClave)}
+                                                disabled={esTareaPendiente}
+                                            >
+                                                Tarea realizada
+                                            </button>
+                                            <button
+                                                className="item__boton eliminar"
+                                                onClick={() => eliminarTarea(tareaClave)}
+                                            >
+                                                Quitar tarea del listado
+                                            </button>
+                                        </li>
+                                    </ul>
+                                )
+                            );
+                        })
+                    }
+                </details>
+            )}
+
+            {/* Otras tareas */}
+            {tareasOrdenadas
+                .filter(({ clave }) => !/^T\/P/.test(clave))  // Filtrar tareas que no son pendientes
+                .map(({ clave, hora, descripcion }, index) => {
                     const visibilidadDia = JSON.parse(localStorage.getItem(`visibilidad-${selectedDayTasks}`)) || {};
-                    const tareaClave = clave || hora; // Para las tareas con horario, usar la hora como clave
+                    const tareaClave = clave || hora;
 
-                    // Verificar si la tarea es visible
                     const tareaVisible = visibilidadDia[tareaClave] !== false;
-
-                    // Verificar si la clave pertenece a una tarea pendiente (T/P)
-                    const esTareaPendiente = /^T\/P/.test(clave);
 
                     return (
                         tareaVisible && (
                             <ul key={index}>
-                                <li key={index} className="tareas__item">
+                                <li className="tareas__item">
                                     <p className="item__hora">{clave || hora || 'Sin horario'}</p>
                                     <p className="item__descripcion">{descripcion}</p>
                                     <button
-                                        className={`item__boton ${esTareaPendiente ? 'item__boton--gris' : ''}`}
-                                        onClick={() => !esTareaPendiente && tareaRealizada(tareaClave)}
-                                        disabled={esTareaPendiente}
+                                        className="item__boton"
+                                        onClick={() => tareaRealizada(tareaClave)}
                                     >
                                         Tarea realizada
                                     </button>
@@ -149,10 +188,8 @@ export const ListadoTareas = ({ selectedDayTasks }) => {
                             </ul>
                         )
                     );
-                })
-            ) : (
-                <></>
-            )}
-        </>
+                })}
+        </div>
     );
+
 };
