@@ -9,6 +9,13 @@ export const AgregarTarea = ({ setSelectedDayTasks, selectedDayTasks }) => {
         setMostrar(!mostrar);
     };
 
+    // Función para obtener el día de la semana actual
+    const obtenerDiaDeHoy = () => {
+        const dias = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
+        const hoy = new Date();
+        return dias[hoy.getDay()]; // Devuelve el nombre del día (ej. "lunes", "martes", etc.)
+    };
+
     useEffect(() => {
         const opcionSeleccionada = document.getElementById("opciones").value;
         setHabilitarHorario(opcionSeleccionada !== "pendientes");
@@ -19,6 +26,10 @@ export const AgregarTarea = ({ setSelectedDayTasks, selectedDayTasks }) => {
         } else {
             document.getElementById("horario").style.backgroundColor = ''; // Restaurar color original
         }
+
+        // Establecer el día de hoy como opción seleccionada por defecto
+        const diaHoy = obtenerDiaDeHoy();
+        document.getElementById("opciones").value = diaHoy; // Asigna el día actual como valor seleccionado
     }, []); // Este efecto se ejecuta solo al montar el componente
 
     const manejarCambioOpcion = () => {
