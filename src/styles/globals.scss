@@ -40,12 +40,14 @@ main {
 
 footer {
     display: flex;
+    flex-direction: row;
     background-color: var.$cabecera;
     color: var.$letrasLogo;
     align-items: center;
     justify-content: center;
     padding: 1rem;
     text-align: center;
+    gap: 0.5rem;
 }
 
 input{

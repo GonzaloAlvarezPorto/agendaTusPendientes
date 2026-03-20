@@ -33,7 +33,7 @@ export const Footer = () => {
           title={link.title}
         >
           <img
-            className='w-30px bd_1_s_letrasLogo bdrad-100px'
+            className='w-30px bd_1_s_letrasLogo bdrad-100px bgc-whatsapp'
             src={link.img}
             alt={link.alt}
           />
