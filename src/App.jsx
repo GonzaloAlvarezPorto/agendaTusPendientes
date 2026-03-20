@@ -1,9 +1,9 @@
 import { BrowserRouter } from "react-router-dom";
-import { Header } from "./components/aHeader/Header";
-import { Footer } from "./components/cFooter/Footer";
-import { Principal } from "./components/bMain/Principal"
+import './styles/globals.scss';
+import { Header } from "./components/Header";
+import { Principal } from "./components/Principal";
+import { Footer } from "./components/Footer";
 import { TaskProvider } from "./context/TaskContext";
-import './styles/styles.scss';
 
 function App() {
 

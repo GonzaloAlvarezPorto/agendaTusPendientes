@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { TaskContext } from '../../../../context/TaskContext';
+import { TaskContext } from '../context/TaskContext';
 
 export const FechaTareas = ({ setSelectedDayTasks }) => {
     const { capitalizeFirstLetter } = useContext(TaskContext);
@@ -56,13 +56,13 @@ export const FechaTareas = ({ setSelectedDayTasks }) => {
     };
 
     return (
-        <div className='tareas__fecha'>
-            <h1>
+        <div className='d-flex fd-row jc-center bgc-unBlancoMenos  ai-center g-0_5rem py-1rem bdb_1_s_negro w-100'>
+            <h1 className='fs-14px md-fs-22px w-40'>
                 Tareas de{diaAMostrar}
             </h1>
-            <div>
-                <label htmlFor="verTareas">Mostrar tareas de</label>
-                <select id="verTareas" name="verTareas" onChange={handleChange} value={diaSeleccionado}>
+            <div className='d-flex fd-col g-0_5rem fs-14px w-50 ai-end'>
+                <label className='md-w-50' htmlFor="verTareas">Mostrar tareas de</label>
+                <select className='w-100 md-w-50 cu-poi py-0_5rem' id="verTareas" name="verTareas" onChange={handleChange} value={diaSeleccionado}>
                     {diasSemana.map((dia, index) => {
                         // Si el día de la opción es el día actual, mostramos "hoy"
                         const diaMostrar = dia === diaHoy ? `Hoy (${dia})` : capitalizeFirstLetter(dia);

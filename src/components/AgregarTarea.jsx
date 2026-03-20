@@ -146,26 +146,26 @@ export const AgregarTarea = ({ setSelectedDayTasks, selectedDayTasks }) => {
     const reiniciarTareas = () => {
         // Construir la clave dinámica basada en el día seleccionado
         const tareasAReiniciar = `visibilidad-${selectedDayTasks}`;
-    
+
         // Obtener el objeto de tareas del localStorage
         const tareasDelDiaAReiniciar = JSON.parse(localStorage.getItem(tareasAReiniciar));
-    
+
         // Validar si existen tareas para el día seleccionado
         if (!tareasDelDiaAReiniciar) {
             console.error(`No se encontraron tareas para ${selectedDayTasks}`);
             return;
         }
-    
+
         // Cambiar todos los valores a true
         const tareasReiniciadas = Object.fromEntries(
             Object.entries(tareasDelDiaAReiniciar).map(([clave, _]) => [clave, true])
         );
-    
+
         // Guardar el objeto actualizado en el localStorage
         localStorage.setItem(tareasAReiniciar, JSON.stringify(tareasReiniciadas));
-    
+
     };
-    
+
 
     const manejarEnter = (event) => {
         if (event.key === "Enter") {
@@ -175,9 +175,9 @@ export const AgregarTarea = ({ setSelectedDayTasks, selectedDayTasks }) => {
 
     return (
         <>
-            <div className="agregar-tarea">
-                <label htmlFor="opciones">Agregar tarea a:</label>
-                <select id="opciones" name="opciones" onChange={manejarCambioOpcion}>
+            <div className='d-flex fd-col g-0_5rem ai-center jc-center bgc-fondoAgregar w-100 py-1rem'>
+                <label className='w-90 fc-letrasLogo' htmlFor="opciones">Agregar tarea a:</label>
+                <select className='w-90 py-0_5rem cu-poi fc-negro bgc-unBlancoMenos bd_1_s_letrasLogo' id="opciones" name="opciones" onChange={manejarCambioOpcion}>
                     <option value="todos">Todos los días</option>
                     <option value="pendientes">Pendientes</option>
                     <option value="lunes">Lunes</option>
@@ -188,29 +188,31 @@ export const AgregarTarea = ({ setSelectedDayTasks, selectedDayTasks }) => {
                     <option value="sábado">Sábado</option>
                     <option value="domingo">Domingo</option>
                 </select>
-                <label htmlFor="horario">Horario:</label>
+                <label className='w-90 fc-letrasLogo' htmlFor="horario">Horario:</label>
                 <input
                     type="text"
                     id="horario"
                     name="horario"
                     placeholder="Ingresá la hora (HH.MM)"
                     disabled={!habilitarHorario}
+                    className='w-90 py-1rem bgc-unBlancoMenos fc-negro bd_1_s_letrasLogo'
                 />
-                <label htmlFor="tarea">Tarea:</label>
+                <label className='w-90 fc-letrasLogo' htmlFor="tarea">Tarea:</label>
                 <input
                     type="text"
                     placeholder="Ingresá una descripción"
                     id="tarea"
                     name="tarea"
                     onKeyDown={manejarEnter}
+                    className='w-90 py-1rem bgc-unBlancoMenos fc-negro bd_1_s_letrasLogo'
                 />
-                <button onClick={agregarTarea}>Agregar tarea</button>
-                <button className="reiniciar__boton" onClick={reiniciarTareas}>Reiniciar tareas</button>
-                <button onClick={mostrarExplicacion}>
+                <button className='btn-form' onClick={agregarTarea}>Agregar tarea</button>
+                <button className='btn-form' onClick={reiniciarTareas}>Reiniciar tareas</button>
+                <button className='btn-form' onClick={mostrarExplicacion}>
                     {mostrar ? "Ocultar explicación" : "Mostrar explicación"}
                 </button>
             </div>
-            <Instrucciones mostrar={mostrar} />
+            {mostrar && <Instrucciones />}
         </>
     );
 };
