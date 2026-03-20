@@ -10,8 +10,8 @@ export const Footer = () => {
       title: "whatsapp"
     },
     {
-      href: "https://gonzaloalvarezporto.vercel.app/",
-      img: "/media/images/gonzaloAlvarezPorto.png",
+      href: "https://www.gonzaloalvarezporto.com.ar/",
+      img: "/media/images/minimalista.png",
       alt: "gapdev",
       title: "gapdev"
     }
